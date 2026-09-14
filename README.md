@@ -7,7 +7,7 @@ Production-ready Next.js (App Router) + TypeScript + Tailwind site for **Solar E
 
 ## Features
 
-1. **Address entry** — Google Places Autocomplete when `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` is set; otherwise a text field with server-side Geocoding (Google) or Nominatim fallback.
+1. **Address entry** — Plain text field; server-side Geocoding (Google) or Nominatim fallback on submit.
 2. **Solar check** (server-only) — Google Solar API `buildingInsights:findClosest`, optional `dataLayers` RGB imagery (proxied), **actual panel rectangles** from `solarPotential.solarPanels`, Good/Fair/Poor classification, mid-config panel count / kW.
 3. **Consult form** — phone, address (prefilled), email, preferred date/time; client + server validation.
 4. **Lead pipeline** — persist to `data/leads.json`, email via Resend or SMTP, append to Google Sheets when credentials are set.
@@ -37,9 +37,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ### Google Cloud
 
 1. Create a Google Cloud project and enable billing.
-2. Enable **Solar API**, **Geocoding API**, and (optional) **Places API**.
-3. Create an API key → set `GOOGLE_MAPS_API_KEY` in `.env.local`.
-4. For browser Places Autocomplete, set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (restrict by HTTP referrer). Prefer restricting the server key by IP / API.
+2. Enable **Solar API** and **Geocoding API**.
+3. Create an API key → set `GOOGLE_MAPS_API_KEY` in `.env.local`. Prefer restricting the server key by IP / API.
 
 ### Email & Sheets (optional)
 

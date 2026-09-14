@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useState } from "react";
 import { AddressInput } from "./AddressInput";
 import { RoofMap } from "./RoofMap";
 import type { SolarCheckResult } from "@/lib/types";
@@ -33,15 +33,6 @@ export function Funnel() {
   const [preferredTime, setPreferredTime] = useState("");
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [leadNote, setLeadNote] = useState<string | null>(null);
-
-  const onPlaceSelect = useCallback(
-    (place: { address: string; latitude?: number; longitude?: number }) => {
-      setAddress(place.address);
-      setLat(place.latitude);
-      setLng(place.longitude);
-    },
-    []
-  );
 
   async function runCheck(e?: FormEvent) {
     e?.preventDefault();
@@ -189,7 +180,6 @@ export function Funnel() {
                 setLat(undefined);
                 setLng(undefined);
               }}
-              onPlaceSelect={onPlaceSelect}
               disabled={loading}
             />
 

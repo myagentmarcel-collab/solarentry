@@ -18,12 +18,3 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Keep Places dropdown above sticky header */
-.pac-container {
-  z-index: 50 !important;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-  margin-top: 4px;
-  font-family: inherit;
-}
