@@ -21,7 +21,7 @@ interface RoofMapProps {
 /**
  * Renders actual panel rectangles from Google Solar API solarPanels[]
  * (center, orientationDegrees, height/width meters) as an SVG overlay
- * on proxied aerial imagery or a neutral map backdrop.
+ * on a Google Maps Static satellite backdrop (or neutral grid fallback).
  */
 export function RoofMap({
   panels,
@@ -66,7 +66,7 @@ export function RoofMap({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imageryUrl}
-            alt="Aerial view of roof"
+            alt="Satellite view of roof"
             className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
@@ -93,8 +93,15 @@ export function RoofMap({
           ))}
         </svg>
       </div>
-      <div className="absolute bottom-2 left-2 rounded-md bg-black/55 px-2 py-1 text-[11px] text-white backdrop-blur-sm">
-        {panels.length} panels · actual Solar API layout
+      <div className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1.5">
+        <div className="rounded-md bg-black/55 px-2 py-1 text-[11px] text-white backdrop-blur-sm">
+          {panels.length} panels · Solar API layout
+        </div>
+        {imageryUrl ? (
+          <div className="rounded-md bg-black/55 px-2 py-1 text-[11px] text-white/90 backdrop-blur-sm">
+            Satellite backdrop via Google Maps; panel layout from Solar API
+          </div>
+        ) : null}
       </div>
     </div>
   );

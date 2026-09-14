@@ -1,6 +1,6 @@
 import { classifySuitability, pickMidConfig } from "./classify";
 import { geocodeAddress } from "./geocode";
-import { boundsFromPanels } from "./panels";
+import { boundsFromPanels, type MapBounds } from "./panels";
 import type {
   BuildingInsightsSummary,
   LatLng,
@@ -115,8 +115,57 @@ export async function fetchBuildingInsights(
 }
 
 /**
- * Optionally fetch dataLayers for RGB aerial imagery URL.
- * Returns a proxied URL so the API key never reaches the browser.
+ * Pick a Static Maps zoom so the roof (panel bounds) roughly fills the frame.
+ * Zoom is clamped to ~19–21 for typical residential roofs.
+ */
+export function zoomForRoofBounds(
+  bounds: MapBounds | null,
+  center: LatLng
+): number {
+  if (!bounds) return 20;
+
+  const heightM = Math.abs(bounds.north - bounds.south) * 111320;
+  const widthM =
+    Math.abs(bounds.east - bounds.west) *
+    111320 *
+    Math.cos((center.latitude * Math.PI) / 180);
+  const spanM = Math.max(heightM, widthM, 20);
+
+  // At mid-latitudes, ~640px Static Maps coverage ≈ 40m @21, 80m @20, 160m @19.
+  // Aim for the roof to fill most of the frame with a little margin.
+  if (spanM < 35) return 21;
+  if (spanM < 75) return 20;
+  if (spanM < 150) return 19;
+  return 18;
+}
+
+/**
+ * Build a browser-displayable satellite backdrop via Google Maps Static API.
+ * Proxied through /api/imagery so the API key stays server-side.
+ *
+ * Note: Solar dataLayers rgbUrl is a GeoTIFF and cannot be used as <img> src
+ * without conversion; we intentionally use Static Maps JPEG/PNG instead.
+ */
+export function buildSatelliteBackdropUrl(
+  location: LatLng,
+  zoom = 20
+): string {
+  const url = new URL("https://maps.googleapis.com/maps/api/staticmap");
+  url.searchParams.set(
+    "center",
+    `${location.latitude},${location.longitude}`
+  );
+  url.searchParams.set("zoom", String(zoom));
+  url.searchParams.set("size", "640x640");
+  url.searchParams.set("scale", "2");
+  url.searchParams.set("maptype", "satellite");
+  // Key is attached by /api/imagery — never expose it to the browser.
+  return `/api/imagery?src=${encodeURIComponent(url.toString())}`;
+}
+
+/**
+ * Optionally fetch Solar dataLayers rgbUrl (GeoTIFF). Kept for future PNG
+ * conversion; do not use the returned URL as an <img> src.
  */
 export async function fetchRgbImageryUrl(
   location: LatLng,
@@ -138,7 +187,7 @@ export async function fetchRgbImageryUrl(
     const data = (await res.json()) as { rgbUrl?: string };
     if (!data.rgbUrl) return null;
 
-    // Proxy through our API so the browser never sees the key
+    // Proxied GeoTIFF — browsers cannot display this in <img> without conversion.
     const proxied = `/api/imagery?src=${encodeURIComponent(data.rgbUrl)}`;
     return proxied;
   } catch {
@@ -203,28 +252,16 @@ export async function runSolarCheck(input: {
   // Use panels for the selected config count (first N from solarPanels list)
   const panels = sp.solarPanels.slice(0, config.panelsCount);
 
+  // Panel-derived bounds drive SVG overlay alignment (Static Maps is approximate).
   const imageryBounds = boundsFromPanels(
     panels.length ? panels : sp.solarPanels,
     sp.panelHeightMeters,
     sp.panelWidthMeters
   );
 
-  const imageryUrl = await fetchRgbImageryUrl(
-    insights.center,
-    imageryBounds
-      ? Math.max(
-          40,
-          Math.ceil(
-            Math.max(
-              Math.abs(imageryBounds.north - imageryBounds.south) * 111320,
-              Math.abs(imageryBounds.east - imageryBounds.west) *
-                111320 *
-                Math.cos((insights.center.latitude * Math.PI) / 180)
-            ) / 2
-          ) + 15
-        )
-      : 50
-  );
+  const zoom = zoomForRoofBounds(imageryBounds, insights.center);
+  // Displayable JPEG/PNG satellite backdrop — not Solar GeoTIFF rgbUrl.
+  const imageryUrl = buildSatelliteBackdropUrl(insights.center, zoom);
 
   return {
     address,
