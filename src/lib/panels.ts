@@ -28,14 +28,32 @@ export interface PanelRect {
  * Build a rectangle for one solar panel from Google Solar API fields.
  * orientationDegrees is degrees clockwise from north (Google Solar docs).
  */
+export function resolveOrientationDegrees(panel: SolarPanel): number {
+  if (
+    typeof panel.orientationDegrees === "number" &&
+    Number.isFinite(panel.orientationDegrees)
+  ) {
+    return panel.orientationDegrees;
+  }
+  // API sends orientation: LANDSCAPE|PORTRAIT without degrees — default north.
+  return 0;
+}
+
 export function panelToRect(
   panel: SolarPanel,
   heightMeters: number,
   widthMeters: number
 ): PanelRect {
   const { latitude, longitude } = panel.center;
-  const halfH = heightMeters / 2;
-  const halfW = widthMeters / 2;
+  let h = heightMeters;
+  let w = widthMeters;
+  // PORTRAIT swaps long/short edges relative to the default LANDSCAPE layout.
+  if (panel.orientation === "PORTRAIT") {
+    h = widthMeters;
+    w = heightMeters;
+  }
+  const halfH = h / 2;
+  const halfW = w / 2;
 
   // Local offsets in meters relative to panel axes (before rotation):
   // height along orientation (north when orientation=0), width perpendicular.
@@ -46,7 +64,8 @@ export function panelToRect(
     [-halfW, -halfH], // bottom-left
   ];
 
-  const rad = (panel.orientationDegrees * Math.PI) / 180;
+  const orientationDegrees = resolveOrientationDegrees(panel);
+  const rad = (orientationDegrees * Math.PI) / 180;
   const cos = Math.cos(rad);
   const sin = Math.sin(rad);
 
@@ -63,7 +82,7 @@ export function panelToRect(
   return {
     corners,
     center: panel.center,
-    orientationDegrees: panel.orientationDegrees,
+    orientationDegrees,
   };
 }
 
@@ -120,6 +139,10 @@ export function boundsFromPanels(
       east = Math.max(east, c.longitude);
       west = Math.min(west, c.longitude);
     }
+  }
+
+  if (![north, south, east, west].every(Number.isFinite)) {
+    return null;
   }
 
   const midLat = (north + south) / 2;

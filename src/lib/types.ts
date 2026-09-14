@@ -7,7 +7,13 @@ export interface LatLng {
 
 export interface SolarPanel {
   center: LatLng;
+  /**
+   * Degrees clockwise from north. Google Solar API often omits this and sends
+   * `orientation: "LANDSCAPE" | "PORTRAIT"` instead — we default to 0.
+   */
   orientationDegrees: number;
+  /** API enum when orientationDegrees is absent. */
+  orientation?: "LANDSCAPE" | "PORTRAIT" | string;
   yearlyEnergyDcKwh?: number;
   segmentIndex?: number;
 }

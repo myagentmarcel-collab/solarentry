@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
 
   const host = target.hostname;
   const allowed =
+    host === "maps.googleapis.com" ||
     host.endsWith(".googleapis.com") ||
     host.endsWith(".google.com") ||
     host.endsWith(".googleusercontent.com") ||

@@ -30,6 +30,18 @@ export const leadSchema = z.object({
   longitude: z.number().optional(),
 });
 
+export type PersistLeadResult = {
+  record: LeadRecord;
+  /** Where the lead was persisted — file on writable FS, memory+console on Vercel/EROFS. */
+  stored: "file" | "memory";
+};
+
+function isReadOnlyFsError(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const code = "code" in err ? String((err as { code: unknown }).code) : "";
+  return code === "EROFS" || code === "EACCES";
+}
+
 async function ensureLeadsFile(): Promise<void> {
   await fs.mkdir(DATA_DIR, { recursive: true });
   try {
@@ -39,25 +51,53 @@ async function ensureLeadsFile(): Promise<void> {
   }
 }
 
-export async function persistLead(payload: LeadPayload): Promise<LeadRecord> {
-  await ensureLeadsFile();
-  const raw = await fs.readFile(LEADS_FILE, "utf8");
-  const list = JSON.parse(raw || "[]") as LeadRecord[];
+/**
+ * Create a lead record. On Vercel (read-only FS) or EROFS/EACCES, skip the
+ * file write, log the JSON to console, and still return the in-memory record
+ * so the request can continue with email/sheets.
+ */
+export async function persistLead(
+  payload: LeadPayload
+): Promise<PersistLeadResult> {
   const record: LeadRecord = {
     ...payload,
     id: `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     createdAt: new Date().toISOString(),
   };
-  list.push(record);
-  await fs.writeFile(LEADS_FILE, JSON.stringify(list, null, 2) + "\n", "utf8");
-  return record;
+
+  const logMemory = (): PersistLeadResult => {
+    console.log(JSON.stringify(record));
+    return { record, stored: "memory" };
+  };
+
+  // Vercel serverless FS is read-only — never attempt a write that would 500.
+  if (process.env.VERCEL) {
+    return logMemory();
+  }
+
+  try {
+    await ensureLeadsFile();
+    const raw = await fs.readFile(LEADS_FILE, "utf8");
+    const list = JSON.parse(raw || "[]") as LeadRecord[];
+    list.push(record);
+    await fs.writeFile(LEADS_FILE, JSON.stringify(list, null, 2) + "\n", "utf8");
+    return { record, stored: "file" };
+  } catch (err) {
+    if (isReadOnlyFsError(err) || process.env.VERCEL) {
+      console.warn(
+        "[persistLead] read-only filesystem — logging lead to console"
+      );
+      return logMemory();
+    }
+    console.error("[persistLead] unexpected write failure — logging lead", err);
+    return logMemory();
+  }
 }
 
 export async function sendLeadEmail(
   record: LeadRecord
 ): Promise<{ sent: boolean; method?: string; note?: string }> {
-  const to =
-    process.env.LEAD_EMAIL_TO || "solarx28@gmail.com";
+  const to = process.env.LEAD_EMAIL_TO || "solarx28@gmail.com";
   const subject = `Solar Entry consult request — ${record.address}`;
   const text = [
     "New Solar Entry lead",
@@ -110,7 +150,7 @@ export async function sendLeadEmail(
 
   return {
     sent: false,
-    note: "No RESEND_API_KEY or SMTP_* configured — lead stored locally only.",
+    note: "No RESEND_API_KEY or SMTP_* configured — lead logged only.",
   };
 }
 

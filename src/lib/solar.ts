@@ -22,6 +22,24 @@ function requireApiKey(): string {
   return key;
 }
 
+/** Google Solar API returns orientation as LANDSCAPE|PORTRAIT, not degrees. */
+export function normalizeSolarPanel(
+  panel: SolarPanel & { orientation?: string }
+): SolarPanel {
+  const degrees =
+    typeof panel.orientationDegrees === "number" &&
+    Number.isFinite(panel.orientationDegrees)
+      ? panel.orientationDegrees
+      : 0;
+  return {
+    center: panel.center,
+    orientationDegrees: degrees,
+    orientation: panel.orientation,
+    yearlyEnergyDcKwh: panel.yearlyEnergyDcKwh,
+    segmentIndex: panel.segmentIndex,
+  };
+}
+
 export async function fetchBuildingInsights(
   location: LatLng
 ): Promise<BuildingInsightsSummary> {
@@ -60,7 +78,9 @@ export async function fetchBuildingInsights(
       panelWidthMeters?: number;
       panelLifetimeYears?: number;
       carbonOffsetFactorKgPerMwh?: number;
-      solarPanels?: SolarPanel[];
+      solarPanels?: Array<
+        SolarPanel & { orientation?: string; orientationDegrees?: number }
+      >;
       solarPanelConfigs?: Array<{
         panelsCount: number;
         yearlyEnergyDcKwh: number;
@@ -108,11 +128,14 @@ export async function fetchBuildingInsights(
       panelWidthMeters: sp.panelWidthMeters || 0.99,
       panelLifetimeYears: sp.panelLifetimeYears,
       carbonOffsetFactorKgPerMwh: sp.carbonOffsetFactorKgPerMwh,
-      solarPanels: sp.solarPanels || [],
+      solarPanels: (sp.solarPanels || []).map((p) =>
+        normalizeSolarPanel(p as SolarPanel & { orientation?: string })
+      ),
       solarPanelConfigs: configs,
     },
   };
 }
+
 
 /**
  * Pick a Static Maps zoom so the roof (panel bounds) roughly fills the frame.
@@ -150,17 +173,20 @@ export function buildSatelliteBackdropUrl(
   location: LatLng,
   zoom = 20
 ): string {
-  const url = new URL("https://maps.googleapis.com/maps/api/staticmap");
-  url.searchParams.set(
-    "center",
-    `${location.latitude},${location.longitude}`
-  );
-  url.searchParams.set("zoom", String(zoom));
-  url.searchParams.set("size", "640x640");
-  url.searchParams.set("scale", "2");
-  url.searchParams.set("maptype", "satellite");
+  // Build the Static Maps URL with literal commas in `center`.
+  // Do NOT use URLSearchParams here: it encodes "," as %2C, and a following
+  // encodeURIComponent would turn that into %252C (double encoding → 502).
+  // Encode the whole URL exactly once for the /api/imagery?src= query param.
+  // Note: Maps Static API must be enabled on GOOGLE_MAPS_API_KEY.
+  const staticMap =
+    "https://maps.googleapis.com/maps/api/staticmap" +
+    `?center=${location.latitude},${location.longitude}` +
+    `&zoom=${zoom}` +
+    "&size=640x640" +
+    "&scale=2" +
+    "&maptype=satellite";
   // Key is attached by /api/imagery — never expose it to the browser.
-  return `/api/imagery?src=${encodeURIComponent(url.toString())}`;
+  return `/api/imagery?src=${encodeURIComponent(staticMap)}`;
 }
 
 /**
