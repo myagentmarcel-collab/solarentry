@@ -3,7 +3,7 @@
 Production-ready Next.js (App Router) + TypeScript + Tailwind site for **Solar Entry** (solarentry.com) — a clean, mobile-first residential solar screening funnel for Connecticut / US homeowners.
 
 **Phone:** [203-818-3242](tel:+12038183242)  
-**Lead email:** solarx28@gmail.com
+**Lead email:** solarairmiles@gmail.com
 
 ## Features
 
@@ -42,7 +42,8 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Email & Sheets (optional)
 
-- **Resend:** set `RESEND_API_KEY` (and optionally `RESEND_FROM`).
+- **Resend:** set `RESEND_API_KEY` and `RESEND_FROM=Solar Entry <leads@mail.solarentry.com>`.
+- **Lead destination:** set `LEAD_EMAIL_TO=solarairmiles@gmail.com`.
 - **SMTP:** set `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, etc.
 - **Sheets:** set `GOOGLE_SHEETS_ID` (default already set) and `GOOGLE_SERVICE_ACCOUNT_JSON` (full JSON string). Share the sheet with the service account email.
 

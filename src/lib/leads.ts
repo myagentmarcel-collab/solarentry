@@ -119,7 +119,7 @@ export async function sendLeadEmail(
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const from =
-      process.env.RESEND_FROM || "Solar Entry <onboarding@resend.dev>";
+      process.env.RESEND_FROM || "Solar Entry <leads@mail.solarentry.com>";
     await resend.emails.send({ from, to, subject, text, html });
     return { sent: true, method: "resend" };
   }
