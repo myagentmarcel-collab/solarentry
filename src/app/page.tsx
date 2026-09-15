@@ -3,6 +3,19 @@ import { Funnel } from "@/components/Funnel";
 export default function HomePage() {
   return (
     <div>
+      {/* Clear hero banner — pool + solar photo above the white funnel card */}
+      <div className="mx-auto mb-8 w-full max-w-2xl overflow-hidden rounded-2xl border border-[var(--border)] shadow-sm sm:mb-10">
+        <img
+          src="/images/solar-cinematic.jpg"
+          alt="Modern home with a swimming pool and rooftop solar panels"
+          className="h-[240px] w-full object-cover object-center sm:h-[300px] md:h-[340px]"
+          width={1200}
+          height={680}
+          decoding="async"
+          fetchPriority="high"
+        />
+      </div>
+
       <Funnel />
       <section className="mx-auto mt-16 max-w-2xl">
         <h2 className="text-center text-sm font-medium uppercase tracking-[0.12em] text-[var(--muted-dim)]">
