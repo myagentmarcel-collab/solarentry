@@ -55,7 +55,7 @@ export function RoofMap({
   if (!bounds || !panels.length) {
     return (
       <div
-        className={`flex aspect-square items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-100 text-sm text-slate-500 ${className}`}
+        className={`flex aspect-square items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--muted)] ${className}`}
       >
         No panel layout available for this building.
       </div>
@@ -64,7 +64,7 @@ export function RoofMap({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-800 shadow-inner ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] shadow-inner ${className}`}
     >
       <div className="relative aspect-square w-full">
         {imageryUrl ? (
@@ -75,7 +75,7 @@ export function RoofMap({
             className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1a3358] via-[#132a4a] to-[#0b1b33]">
             <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:24px_24px]" />
           </div>
         )}
@@ -90,7 +90,7 @@ export function RoofMap({
             <polygon
               key={poly.key}
               points={poly.points}
-              fill="rgba(14, 165, 233, 0.55)"
+              fill="rgba(91, 164, 230, 0.55)"
               stroke="rgba(255, 255, 255, 0.95)"
               strokeWidth="0.35"
               vectorEffect="non-scaling-stroke"
@@ -99,11 +99,11 @@ export function RoofMap({
         </svg>
       </div>
       <div className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1.5">
-        <div className="rounded-md bg-black/55 px-2 py-1 text-[11px] text-white backdrop-blur-sm">
+        <div className="rounded-md bg-[#0b1b33]/75 px-2 py-1 text-[11px] text-white backdrop-blur-sm">
           {panels.length} panels · Solar API layout
         </div>
         {imageryUrl ? (
-          <div className="rounded-md bg-black/55 px-2 py-1 text-[11px] text-white/90 backdrop-blur-sm">
+          <div className="rounded-md bg-[#0b1b33]/75 px-2 py-1 text-[11px] text-white/90 backdrop-blur-sm">
             Overlay aligned to Static Maps viewport; approximate — not a survey
           </div>
         ) : null}

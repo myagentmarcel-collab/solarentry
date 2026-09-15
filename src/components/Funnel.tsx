@@ -188,7 +188,7 @@ export function Funnel() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-black transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -257,7 +257,7 @@ export function Funnel() {
               <button
                 type="button"
                 onClick={() => setStep("consult")}
-                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-center text-base font-medium text-black transition hover:bg-zinc-100"
+                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-center text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc]"
               >
                 Request a free consult
               </button>
@@ -374,7 +374,7 @@ export function Funnel() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-black transition hover:bg-zinc-100 disabled:opacity-60"
+                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc] disabled:opacity-60"
               >
                 {loading ? "Sending…" : "Submit request"}
               </button>
@@ -520,7 +520,7 @@ function StepIndicator({ step }: { step: Step }) {
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-medium tabular-nums ${
                 active
-                  ? "bg-white text-black"
+                  ? "bg-white text-[#0b1b33]"
                   : "border border-[var(--border)] text-[var(--muted-dim)]"
               }`}
             >
