@@ -18,9 +18,9 @@ export function BrandMark({
     >
       {title ? <title>{title}</title> : null}
       {/* Core disc */}
-      <circle cx="16" cy="16" r="5.25" fill="#DA291C" />
+      <circle cx="16" cy="16" r="5.25" fill="#C1121F" />
       {/* Geometric rays — short rectangles at 45° increments */}
-      <g fill="#DA291C">
+      <g fill="#C1121F">
         <rect x="14.75" y="2" width="2.5" height="5" rx="0.4" />
         <rect x="14.75" y="25" width="2.5" height="5" rx="0.4" />
         <rect x="2" y="14.75" width="5" height="2.5" rx="0.4" />
