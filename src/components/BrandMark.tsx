@@ -76,7 +76,7 @@ export function BrandWordmark({
 
   return (
     <span
-      className={`select-none text-[var(--foreground)] ${text} ${className}`}
+      className={`select-none text-[#C1121F] ${text} ${className}`}
     >
       SOLAR ENTRY
     </span>
