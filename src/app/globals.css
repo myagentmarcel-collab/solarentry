@@ -44,6 +44,43 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Soft residential solar photo washed into the light beige theme */
+.site-solar-bg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 0;
+  height: min(72vh, 720px);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(244, 249, 252, 0.82) 0%,
+      rgba(244, 249, 252, 0.76) 32%,
+      rgba(244, 249, 252, 0.9) 68%,
+      rgba(244, 249, 252, 1) 100%
+    ),
+    url("/images/solar-home.jpg");
+  background-size: cover;
+  background-position: center 32%;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 640px) {
+  .site-solar-bg {
+    height: min(58vh, 520px);
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(244, 249, 252, 0.88) 0%,
+        rgba(244, 249, 252, 0.84) 40%,
+        rgba(244, 249, 252, 0.95) 75%,
+        rgba(244, 249, 252, 1) 100%
+      ),
+      url("/images/solar-home.jpg");
+    background-position: center 28%;
+  }
+}
+
 /* Thin focus ring — UN blue accent, high contrast */
 :focus-visible {
   outline: 2px solid var(--accent);
