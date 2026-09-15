@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Light palette; Pantone 485 C brand red. */
-  --background: #f7f7f8;
-  --foreground: #171a1f;
+  /* Light, airy palette with a UN-inspired blue brand accent. */
+  --background: #f4f9fc;
+  --foreground: #0b2a3f;
   --surface: #ffffff;
-  --surface-elevated: #f3f4f6;
-  --border: #d8dce3;
-  --border-subtle: #e8eaef;
-  --muted: #5b6470;
-  --muted-dim: #6b7380;
-  --accent: #da291c;
-  --accent-strong: #b82217;
-  --accent-hover: #b82217;
-  --accent-soft: rgba(218, 41, 28, 0.12);
+  --surface-elevated: #edf6fb;
+  --border: #c5dce8;
+  --border-subtle: #dcebf2;
+  --muted: #4e6878;
+  --muted-dim: #58798a;
+  --accent: #009edb;
+  --accent-strong: #006f9d;
+  --accent-hover: #0076a8;
+  --accent-soft: rgba(0, 158, 219, 0.12);
   --danger: #c2414f;
   --danger-bg: rgba(194, 65, 79, 0.1);
   --success: #16845a;
@@ -99,7 +99,7 @@ body {
   }
 }
 
-/* Thin focus ring — Pantone 485 accent, high contrast */
+/* Thin focus ring — UN blue accent, high contrast */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
