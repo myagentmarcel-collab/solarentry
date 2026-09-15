@@ -69,16 +69,18 @@ export function BrandWordmark({
   className?: string;
   size?: "sm" | "md";
 }) {
-  const text =
+  const scale =
     size === "sm"
-      ? "text-[11px] font-bold tracking-[0.16em]"
-      : "text-[13px] font-bold tracking-[0.18em] sm:text-[14px]";
+      ? "text-[15px] leading-none"
+      : "text-[18px] leading-none sm:text-[20px]";
 
   return (
     <span
-      className={`select-none text-[#C1121F] ${text} ${className}`}
+      className={`select-none inline-flex items-baseline gap-[0.28em] text-[#C1121F] ${scale} ${className}`}
+      style={{ letterSpacing: "-0.02em" }}
     >
-      SOLAR ENTRY
+      <span className="font-extrabold">Solar</span>
+      <span className="font-extrabold">Entry</span>
     </span>
   );
 }
@@ -90,7 +92,7 @@ export function BrandLockup({
   className?: string;
   size?: "sm" | "md";
 }) {
-  const markSize = size === "sm" ? "h-5 w-5" : "h-6 w-6 sm:h-7 sm:w-7";
+  const markSize = size === "sm" ? "h-6 w-6" : "h-7 w-7 sm:h-8 sm:w-8";
   const gap = size === "sm" ? "gap-2" : "gap-2.5";
 
   return (
