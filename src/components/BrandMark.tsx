@@ -71,8 +71,8 @@ export function BrandWordmark({
 }) {
   const text =
     size === "sm"
-      ? "text-[11px] font-semibold tracking-[0.18em]"
-      : "text-[13px] font-semibold tracking-[0.2em] sm:text-[14px]";
+      ? "text-[11px] font-bold tracking-[0.16em]"
+      : "text-[13px] font-bold tracking-[0.18em] sm:text-[14px]";
 
   return (
     <span
