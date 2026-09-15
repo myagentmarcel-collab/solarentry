@@ -18,9 +18,9 @@ export function BrandMark({
     >
       {title ? <title>{title}</title> : null}
       {/* Core disc */}
-      <circle cx="16" cy="16" r="5.25" fill="#E31937" />
+      <circle cx="16" cy="16" r="5.25" fill="#E82127" />
       {/* Geometric rays — short rectangles at 45° increments */}
-      <g fill="#E31937">
+      <g fill="#E82127">
         <rect x="14.75" y="2" width="2.5" height="5" rx="0.4" />
         <rect x="14.75" y="25" width="2.5" height="5" rx="0.4" />
         <rect x="2" y="14.75" width="5" height="2.5" rx="0.4" />
@@ -76,7 +76,7 @@ export function BrandWordmark({
 
   return (
     <span
-      className={`select-none text-[#E31937] ${text} ${className}`}
+      className={`select-none text-[#E82127] ${text} ${className}`}
     >
       SOLAR ENTRY
     </span>

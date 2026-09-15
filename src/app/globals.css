@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Light palette with Tesla/Swiss-style red brand accent. */
+  /* Light palette; Tesla logo red accent (not Swiss flag). */
   --background: #f7f7f8;
   --foreground: #171a1f;
   --surface: #ffffff;
@@ -10,10 +10,10 @@
   --border-subtle: #e8eaef;
   --muted: #5b6470;
   --muted-dim: #6b7380;
-  --accent: #e31937;
-  --accent-strong: #c4122f;
-  --accent-hover: #c4122f;
-  --accent-soft: rgba(227, 25, 55, 0.12);
+  --accent: #e82127;
+  --accent-strong: #c41b20;
+  --accent-hover: #c41b20;
+  --accent-soft: rgba(232, 33, 39, 0.12);
   --danger: #c2414f;
   --danger-bg: rgba(194, 65, 79, 0.1);
   --success: #16845a;
