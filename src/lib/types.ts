@@ -9,7 +9,8 @@ export interface SolarPanel {
   center: LatLng;
   /**
    * Degrees clockwise from north. Google Solar API often omits this and sends
-   * `orientation: "LANDSCAPE" | "PORTRAIT"` instead — we default to 0.
+   * `orientation: "LANDSCAPE" | "PORTRAIT"` instead — we fill from
+   * roofSegmentStats[segmentIndex].azimuthDegrees when available, else 0.
    */
   orientationDegrees: number;
   /** API enum when orientationDegrees is absent. */

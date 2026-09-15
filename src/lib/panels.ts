@@ -35,7 +35,7 @@ export function resolveOrientationDegrees(panel: SolarPanel): number {
   ) {
     return panel.orientationDegrees;
   }
-  // API sends orientation: LANDSCAPE|PORTRAIT without degrees — default north.
+  // API may omit degrees; normalizeSolarPanel should have filled from segment azimuth.
   return 0;
 }
 
@@ -91,6 +91,39 @@ export interface MapBounds {
   south: number;
   east: number;
   west: number;
+}
+
+/**
+ * Exact geographic bounds of a Google Maps Static API image for a given
+ * center, zoom, and logical size.
+ *
+ * Uses the standard Web Mercator meters-per-pixel formula:
+ *   m/px = 156543.03392 * cos(lat) / 2^zoom
+ *
+ * `scale` (1 or 2) doubles output pixels but does NOT change coverage, so
+ * geographic bounds use the logical `size` only (e.g. 640, not 1280).
+ */
+export function boundsFromStaticMap(
+  center: LatLng,
+  zoom: number,
+  size = 640,
+  scale = 2
+): MapBounds {
+  void scale; // retained in signature for callers; coverage ignores it
+  const metersPerPixel =
+    (156543.03392 * Math.cos((center.latitude * Math.PI) / 180)) /
+    Math.pow(2, zoom);
+  const halfSpanMeters = (size / 2) * metersPerPixel;
+
+  const padLat = metersToLatDegrees(halfSpanMeters);
+  const padLng = metersToLngDegrees(halfSpanMeters, center.latitude);
+
+  return {
+    north: center.latitude + padLat,
+    south: center.latitude - padLat,
+    east: center.longitude + padLng,
+    west: center.longitude - padLng,
+  };
 }
 
 /** Project lat/lng into 0–1 SVG viewBox space within given bounds. */

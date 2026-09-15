@@ -1,6 +1,10 @@
 import { classifySuitability, pickMidConfig } from "./classify";
 import { geocodeAddress } from "./geocode";
-import { boundsFromPanels, type MapBounds } from "./panels";
+import {
+  boundsFromPanels,
+  boundsFromStaticMap,
+  type MapBounds,
+} from "./panels";
 import type {
   BuildingInsightsSummary,
   LatLng,
@@ -12,6 +16,10 @@ import type {
 const DISCLAIMER =
   "Results are a Google Solar API satellite screening, not an on-site inspection.";
 
+/** Static Maps logical size (scale=2 doubles pixels only, not coverage). */
+const STATIC_MAP_SIZE = 640;
+const STATIC_MAP_SCALE = 2;
+
 function requireApiKey(): string {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   if (!key) {
@@ -22,22 +30,57 @@ function requireApiKey(): string {
   return key;
 }
 
-/** Google Solar API returns orientation as LANDSCAPE|PORTRAIT, not degrees. */
+/**
+ * Normalize a Solar API panel. Prefer API orientationDegrees; if missing,
+ * fall back to roofSegmentStats[segmentIndex].azimuthDegrees so panels
+ * track roof orientation instead of all sitting at 0°.
+ */
 export function normalizeSolarPanel(
-  panel: SolarPanel & { orientation?: string }
+  panel: SolarPanel & { orientation?: string },
+  segmentAzimuthByIndex?: ReadonlyMap<number, number>
 ): SolarPanel {
-  const degrees =
+  let degrees: number | undefined =
     typeof panel.orientationDegrees === "number" &&
     Number.isFinite(panel.orientationDegrees)
       ? panel.orientationDegrees
-      : 0;
+      : undefined;
+
+  if (
+    degrees === undefined &&
+    segmentAzimuthByIndex &&
+    typeof panel.segmentIndex === "number"
+  ) {
+    const az = segmentAzimuthByIndex.get(panel.segmentIndex);
+    if (typeof az === "number" && Number.isFinite(az)) {
+      degrees = az;
+    }
+  }
+
   return {
     center: panel.center,
-    orientationDegrees: degrees,
+    orientationDegrees: degrees ?? 0,
     orientation: panel.orientation,
     yearlyEnergyDcKwh: panel.yearlyEnergyDcKwh,
     segmentIndex: panel.segmentIndex,
   };
+}
+
+function buildSegmentAzimuthMap(
+  roofSegmentStats:
+    | Array<{ azimuthDegrees?: number; pitchDegrees?: number }>
+    | undefined
+): Map<number, number> {
+  const map = new Map<number, number>();
+  if (!roofSegmentStats) return map;
+  roofSegmentStats.forEach((seg, index) => {
+    if (
+      typeof seg.azimuthDegrees === "number" &&
+      Number.isFinite(seg.azimuthDegrees)
+    ) {
+      map.set(index, seg.azimuthDegrees);
+    }
+  });
+  return map;
 }
 
 export async function fetchBuildingInsights(
@@ -78,6 +121,12 @@ export async function fetchBuildingInsights(
       panelWidthMeters?: number;
       panelLifetimeYears?: number;
       carbonOffsetFactorKgPerMwh?: number;
+      roofSegmentStats?: Array<{
+        pitchDegrees?: number;
+        azimuthDegrees?: number;
+        stats?: unknown;
+        center?: LatLng;
+      }>;
       solarPanels?: Array<
         SolarPanel & { orientation?: string; orientationDegrees?: number }
       >;
@@ -112,6 +161,8 @@ export async function fetchBuildingInsights(
       ((sp.panelCapacityWatts || 400) * c.panelsCount) / 1000,
   }));
 
+  const segmentAzimuthByIndex = buildSegmentAzimuthMap(sp.roofSegmentStats);
+
   return {
     name: data.name,
     center: data.center,
@@ -129,7 +180,10 @@ export async function fetchBuildingInsights(
       panelLifetimeYears: sp.panelLifetimeYears,
       carbonOffsetFactorKgPerMwh: sp.carbonOffsetFactorKgPerMwh,
       solarPanels: (sp.solarPanels || []).map((p) =>
-        normalizeSolarPanel(p as SolarPanel & { orientation?: string })
+        normalizeSolarPanel(
+          p as SolarPanel & { orientation?: string },
+          segmentAzimuthByIndex
+        )
       ),
       solarPanelConfigs: configs,
     },
@@ -182,8 +236,8 @@ export function buildSatelliteBackdropUrl(
     "https://maps.googleapis.com/maps/api/staticmap" +
     `?center=${location.latitude},${location.longitude}` +
     `&zoom=${zoom}` +
-    "&size=640x640" +
-    "&scale=2" +
+    `&size=${STATIC_MAP_SIZE}x${STATIC_MAP_SIZE}` +
+    `&scale=${STATIC_MAP_SCALE}` +
     "&maptype=satellite";
   // Key is attached by /api/imagery — never expose it to the browser.
   return `/api/imagery?src=${encodeURIComponent(staticMap)}`;
@@ -278,16 +332,25 @@ export async function runSolarCheck(input: {
   // Use panels for the selected config count (first N from solarPanels list)
   const panels = sp.solarPanels.slice(0, config.panelsCount);
 
-  // Panel-derived bounds drive SVG overlay alignment (Static Maps is approximate).
-  const imageryBounds = boundsFromPanels(
+  // Panel bbox only drives zoom selection (roof fills the frame).
+  const panelBounds = boundsFromPanels(
     panels.length ? panels : sp.solarPanels,
     sp.panelHeightMeters,
     sp.panelWidthMeters
   );
 
-  const zoom = zoomForRoofBounds(imageryBounds, insights.center);
+  const zoom = zoomForRoofBounds(panelBounds, insights.center);
   // Displayable JPEG/PNG satellite backdrop — not Solar GeoTIFF rgbUrl.
   const imageryUrl = buildSatelliteBackdropUrl(insights.center, zoom);
+
+  // SVG overlay must use the Static Map's exact viewport, not the tight
+  // panel-only bbox — otherwise panels float at the wrong scale/position.
+  const imageryBounds = boundsFromStaticMap(
+    insights.center,
+    zoom,
+    STATIC_MAP_SIZE,
+    STATIC_MAP_SCALE
+  );
 
   return {
     address,
