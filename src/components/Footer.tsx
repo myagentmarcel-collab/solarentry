@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-[var(--border)] bg-[var(--background)]">
       <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div>
-          <p className="text-sm font-medium tracking-tight text-white">
+          <p className="text-sm font-medium tracking-tight text-[var(--foreground)]">
             Solar Entry
           </p>
           <p className="mt-1.5 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
@@ -21,13 +21,13 @@ export function Footer() {
         <div className="flex flex-col gap-2.5 text-sm sm:items-end">
           <a
             href={TEL}
-            className="font-medium tabular-nums tracking-tight text-white transition hover:text-[var(--accent)]"
+            className="font-medium tabular-nums tracking-tight text-[var(--foreground)] transition hover:text-[var(--accent-strong)]"
           >
             {PHONE}
           </a>
           <Link
             href="/privacy"
-            className="text-[var(--muted)] transition hover:text-white"
+            className="text-[var(--muted)] transition hover:text-[var(--accent-strong)]"
           >
             Privacy
           </Link>

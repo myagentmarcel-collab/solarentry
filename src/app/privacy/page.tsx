@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <article className="mx-auto max-w-2xl rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
-      <h1 className="text-2xl font-medium tracking-tight text-white sm:text-3xl">
+      <h1 className="text-2xl font-medium tracking-tight text-[var(--foreground)] sm:text-3xl">
         Privacy note
       </h1>
       <p className="mt-5 text-[var(--muted)] leading-relaxed">
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
         Questions? Call{" "}
         <a
           href="tel:+12038183242"
-          className="font-medium text-white underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent)]"
+          className="font-medium text-[var(--foreground)] underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent-strong)]"
         >
           203-818-3242
         </a>{" "}
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
       <p className="mt-10">
         <Link
           href="/"
-          className="text-sm font-medium text-[var(--muted)] transition hover:text-white"
+          className="text-sm font-medium text-[var(--muted)] transition hover:text-[var(--accent-strong)]"
         >
           ← Back to solar check
         </Link>

@@ -33,7 +33,7 @@ export function AddressInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-50"
+        className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-50"
       />
       <p className="mt-2 text-xs text-[var(--muted-dim)]">
         Enter full street address (city, state, ZIP); we’ll look it up on submit.

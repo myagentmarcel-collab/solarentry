@@ -163,7 +163,7 @@ export function Funnel() {
 
       {step === "address" && (
         <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
-          <h1 className="text-3xl font-medium tracking-tight text-white sm:text-4xl sm:leading-[1.15]">
+          <h1 className="text-3xl font-medium tracking-tight text-[var(--foreground)] sm:text-4xl sm:leading-[1.15]">
             Check your roof for solar
           </h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted)]">
@@ -188,7 +188,7 @@ export function Funnel() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -214,7 +214,7 @@ export function Funnel() {
                 <p className="text-xs font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
                   Results for
                 </p>
-                <h2 className="mt-1 text-lg font-medium tracking-tight text-white sm:text-xl">
+                <h2 className="mt-1 text-lg font-medium tracking-tight text-[var(--foreground)] sm:text-xl">
                   {result.address}
                 </h2>
               </div>
@@ -257,7 +257,7 @@ export function Funnel() {
               <button
                 type="button"
                 onClick={() => setStep("consult")}
-                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-center text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc]"
+                className="flex-1 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-center text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white"
               >
                 Request a free consult
               </button>
@@ -268,7 +268,7 @@ export function Funnel() {
                   setResult(null);
                   setError(null);
                 }}
-                className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3.5 text-base font-medium text-[var(--muted)] transition hover:border-white/20 hover:text-white"
+                className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3.5 text-base font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/50 hover:text-[var(--accent-strong)]"
               >
                 Try another address
               </button>
@@ -279,7 +279,7 @@ export function Funnel() {
 
       {step === "consult" && (
         <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
-          <h2 className="text-2xl font-medium tracking-tight text-white sm:text-3xl">
+          <h2 className="text-2xl font-medium tracking-tight text-[var(--foreground)] sm:text-3xl">
             Schedule a consult
           </h2>
           <p className="mt-3 text-[var(--muted)] leading-relaxed">
@@ -287,7 +287,7 @@ export function Funnel() {
             Prefer to talk now?{" "}
             <a
               href={TEL}
-              className="font-medium text-white underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent)]"
+              className="font-medium text-[var(--foreground)] underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent-strong)]"
             >
               {PHONE_DISPLAY}
             </a>
@@ -374,14 +374,14 @@ export function Funnel() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-[#0b1b33] transition hover:bg-[#e8f4fc] disabled:opacity-60"
+                className="flex-1 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:opacity-60"
               >
                 {loading ? "Sending…" : "Submit request"}
               </button>
               <button
                 type="button"
                 onClick={() => setStep("result")}
-                className="rounded-lg border border-[var(--border)] px-4 py-3.5 font-medium text-[var(--muted)] transition hover:border-white/20 hover:text-white"
+                className="rounded-lg border border-[var(--border)] px-4 py-3.5 font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/50 hover:text-[var(--accent-strong)]"
               >
                 Back
               </button>
@@ -403,7 +403,7 @@ export function Funnel() {
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </div>
-          <h2 className="mt-5 text-2xl font-medium tracking-tight text-white sm:text-3xl">
+          <h2 className="mt-5 text-2xl font-medium tracking-tight text-[var(--foreground)] sm:text-3xl">
             Thank you — request received
           </h2>
           <p className="mx-auto mt-3 max-w-md text-[var(--muted)] leading-relaxed">
@@ -412,7 +412,7 @@ export function Funnel() {
           </p>
           <a
             href={TEL}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-5 py-3 text-base font-medium tabular-nums tracking-tight text-white transition hover:border-[var(--accent)]/40"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-5 py-3 text-base font-medium tabular-nums tracking-tight text-[var(--foreground)] transition hover:border-[var(--accent)]/40"
           >
             {PHONE_DISPLAY}
           </a>
@@ -432,7 +432,7 @@ export function Funnel() {
               setPreferredTime("");
               setLeadNote(null);
             }}
-            className="mt-8 text-sm font-medium text-[var(--muted)] transition hover:text-white"
+            className="mt-8 text-sm font-medium text-[var(--muted)] transition hover:text-[var(--accent-strong)]"
           >
             Check another address
           </button>
@@ -443,7 +443,7 @@ export function Funnel() {
 }
 
 const inputClass =
-  "w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5 text-white outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20";
+  "w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20";
 
 function Field({
   label,
@@ -478,7 +478,7 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dt className="text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
         {label}
       </dt>
-      <dd className="mt-1 text-lg font-medium tabular-nums tracking-tight text-white">
+      <dd className="mt-1 text-lg font-medium tabular-nums tracking-tight text-[var(--foreground)]">
         {value}
       </dd>
     </div>
@@ -490,7 +490,7 @@ function SuitabilityBadge({ value }: { value: string }) {
     value === "Good"
       ? "border-[var(--success)]/30 bg-[var(--success-bg)] text-[var(--success)]"
       : value === "Fair"
-        ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+        ? "border-amber-600/30 bg-amber-50 text-amber-700"
         : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted)]";
   return (
     <span
@@ -520,7 +520,7 @@ function StepIndicator({ step }: { step: Step }) {
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-medium tabular-nums ${
                 active
-                  ? "bg-white text-[#0b1b33]"
+                  ? "bg-[var(--accent)] text-[var(--foreground)]"
                   : "border border-[var(--border)] text-[var(--muted-dim)]"
               }`}
             >
@@ -528,7 +528,7 @@ function StepIndicator({ step }: { step: Step }) {
             </span>
             <span
               className={`hidden text-xs font-medium sm:inline ${
-                active ? "text-white" : "text-[var(--muted-dim)]"
+                active ? "text-[var(--foreground)]" : "text-[var(--muted-dim)]"
               }`}
             >
               {s.label}
@@ -536,7 +536,7 @@ function StepIndicator({ step }: { step: Step }) {
             {i < steps.length - 1 && (
               <span
                 className={`mx-1 h-px w-4 sm:w-8 ${
-                  i < current ? "bg-white/40" : "bg-[var(--border)]"
+                  i < current ? "bg-[var(--accent)]/45" : "bg-[var(--border)]"
                 }`}
               />
             )}
@@ -564,7 +564,7 @@ function ErrorBanner({
         <button
           type="button"
           onClick={onRetry}
-          className="shrink-0 font-medium text-white underline underline-offset-2"
+          className="shrink-0 font-medium text-[var(--foreground)] underline underline-offset-2"
         >
           Retry
         </button>

@@ -10,34 +10,34 @@ export default function HomePage() {
         </h2>
         <ul className="mt-6 grid gap-3 text-sm sm:grid-cols-3">
           <li className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5">
-            <span className="text-xs font-medium tabular-nums text-[var(--accent)]">
+            <span className="text-xs font-medium tabular-nums text-[var(--accent-strong)]">
               01
             </span>
-            <p className="mt-2 font-medium text-white">Address</p>
+            <p className="mt-2 font-medium text-[var(--foreground)]">Address</p>
             <p className="mt-1.5 leading-relaxed text-[var(--muted)]">
               Enter your US home address. We geocode it securely on the server.
             </p>
           </li>
           <li className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5">
-            <span className="text-xs font-medium tabular-nums text-[var(--accent)]">
+            <span className="text-xs font-medium tabular-nums text-[var(--accent-strong)]">
               02
             </span>
-            <p className="mt-2 font-medium text-white">Solar check</p>
+            <p className="mt-2 font-medium text-[var(--foreground)]">Solar check</p>
             <p className="mt-1.5 leading-relaxed text-[var(--muted)]">
               Google Solar API estimates sun hours, roof area, and a real panel
               layout.
             </p>
           </li>
           <li className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5">
-            <span className="text-xs font-medium tabular-nums text-[var(--accent)]">
+            <span className="text-xs font-medium tabular-nums text-[var(--accent-strong)]">
               03
             </span>
-            <p className="mt-2 font-medium text-white">Consult</p>
+            <p className="mt-2 font-medium text-[var(--foreground)]">Consult</p>
             <p className="mt-1.5 leading-relaxed text-[var(--muted)]">
               Request a free consult — or call{" "}
               <a
                 href="tel:+12038183242"
-                className="font-medium text-white underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent)] hover:decoration-[var(--accent)]"
+                className="font-medium text-[var(--foreground)] underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent-strong)] hover:decoration-[var(--accent-strong)]"
               >
                 203-818-3242
               </a>

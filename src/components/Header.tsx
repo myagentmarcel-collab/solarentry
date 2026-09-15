@@ -12,7 +12,7 @@ export function Header() {
             <SunIcon />
           </span>
           <span className="flex flex-col leading-tight">
-            <span className="text-[15px] font-medium tracking-tight text-white">
+            <span className="text-[15px] font-medium tracking-tight text-[var(--foreground)]">
               Solar Entry
             </span>
             <span className="hidden text-[11px] tracking-wide text-[var(--muted-dim)] sm:block">
@@ -24,13 +24,13 @@ export function Header() {
         <div className="flex items-center gap-3 sm:gap-5">
           <Link
             href="/privacy"
-            className="hidden text-sm text-[var(--muted)] transition hover:text-white sm:inline"
+            className="hidden text-sm text-[var(--muted)] transition hover:text-[var(--accent-strong)] sm:inline"
           >
             Privacy
           </Link>
           <a
             href={TEL}
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-white transition hover:border-[var(--accent)]/50 hover:bg-[var(--surface-elevated)]"
+            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]/50 hover:bg-[var(--surface-elevated)]"
           >
             <PhoneIcon />
             <span className="tabular-nums tracking-tight">{PHONE}</span>
