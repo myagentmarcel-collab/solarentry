@@ -44,54 +44,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Classy cinematic solar home — full-bleed cover with light vignette */
+/* Soft ambient wash — primary hero lives in the Funnel window card */
 .site-solar-bg {
   pointer-events: none;
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 0;
-  height: min(72vh, 720px);
+  height: min(48vh, 480px);
+  opacity: 0.45;
   background-image:
-    /* Soft fade only near bottom so content cards stay readable */
     linear-gradient(
       180deg,
       transparent 0%,
-      transparent 55%,
-      rgba(244, 249, 252, 0.35) 78%,
-      rgba(244, 249, 252, 0.85) 100%
+      transparent 40%,
+      rgba(244, 249, 252, 0.55) 70%,
+      rgba(244, 249, 252, 0.95) 100%
     ),
-    /* Light cinematic vignette — darker edges, clear center */
     radial-gradient(
       ellipse 85% 75% at 50% 40%,
       transparent 0%,
-      transparent 45%,
-      rgba(8, 18, 28, 0.22) 78%,
-      rgba(8, 18, 28, 0.42) 100%
+      transparent 50%,
+      rgba(8, 18, 28, 0.15) 85%,
+      rgba(8, 18, 28, 0.28) 100%
     ),
     url("/images/solar-cinematic.jpg");
   background-size: cover, cover, cover;
   background-position: center, center, center;
   background-repeat: no-repeat;
-  filter: saturate(1.08) contrast(1.06) brightness(1.02);
+  filter: saturate(1.05) contrast(1.03) brightness(1.04);
 }
 
 @media (max-width: 640px) {
   .site-solar-bg {
-    height: min(58vh, 520px);
+    height: min(40vh, 360px);
+    opacity: 0.4;
     background-image:
       linear-gradient(
         180deg,
         transparent 0%,
-        transparent 48%,
-        rgba(244, 249, 252, 0.4) 72%,
-        rgba(244, 249, 252, 0.88) 100%
+        transparent 35%,
+        rgba(244, 249, 252, 0.6) 68%,
+        rgba(244, 249, 252, 0.96) 100%
       ),
       radial-gradient(
         ellipse 90% 80% at 50% 38%,
         transparent 0%,
-        transparent 42%,
-        rgba(8, 18, 28, 0.24) 76%,
-        rgba(8, 18, 28, 0.45) 100%
+        transparent 48%,
+        rgba(8, 18, 28, 0.18) 80%,
+        rgba(8, 18, 28, 0.3) 100%
       ),
       url("/images/solar-cinematic.jpg");
     background-size: cover, cover, cover;

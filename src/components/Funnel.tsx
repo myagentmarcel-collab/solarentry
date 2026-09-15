@@ -158,51 +158,79 @@ export function Funnel() {
   const minDateStr = minDate.toISOString().slice(0, 10);
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className={`mx-auto w-full ${step === "address" ? "max-w-3xl" : "max-w-2xl"}`}>
       <StepIndicator step={step} />
 
       {step === "address" && (
-        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
-          <h1 className="text-3xl font-medium tracking-tight text-[var(--foreground)] sm:text-4xl sm:leading-[1.15]">
-            Check your roof for solar
-          </h1>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted)]">
-            Free satellite screening for Connecticut &amp; US homeowners.
-            Enter your address to see sun hours, usable roof area, and a panel
-            layout.
-          </p>
+        <section className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-[var(--border)] shadow-md sm:h-[440px] md:h-[500px]">
+          <img
+            src="/images/solar-cinematic.jpg"
+            alt="Modern white home with dark-framed picture windows and rooftop solar panels"
+            className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
+            width={1280}
+            height={720}
+            decoding="async"
+            fetchPriority="high"
+          />
+          {/* Soft vignette so the window card stays readable */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10"
+          />
 
-          <form onSubmit={runCheck} className="mt-8 space-y-6">
-            <AddressInput
-              value={address}
-              onChange={(v) => {
-                setAddress(v);
-                setLat(undefined);
-                setLng(undefined);
-              }}
-              disabled={loading}
-            />
+          {/* Window-pane card — right-center over picture windows on desktop; centered on mobile */}
+          <div className="absolute inset-x-3 bottom-4 top-auto z-10 sm:inset-auto sm:bottom-auto sm:left-[48%] sm:right-[4%] sm:top-[18%] md:left-[50%] md:right-[5%] md:top-[16%]">
+            <div className="relative overflow-hidden rounded-sm border-[5px] border-[#1a1a1a] shadow-[0_12px_40px_rgba(0,0,0,0.35)] sm:border-[6px]">
+              {/* Inner glass lip — suggests window pane without crossing the form */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-[3px] z-10 rounded-[1px] border border-white/40 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.18)]"
+              />
+              <div className="relative z-20 bg-white/80 p-4 backdrop-blur-md sm:p-5 md:p-6">
+                <h1 className="text-xl font-medium tracking-tight text-[var(--foreground)] sm:text-2xl md:text-[1.65rem] md:leading-snug">
+                  Check your roof for solar
+                </h1>
+                <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
+                  Free satellite screening for CT &amp; US homeowners.
+                </p>
 
-            {error && <ErrorBanner message={error} onRetry={() => runCheck()} />}
+                <form onSubmit={runCheck} className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
+                  <AddressInput
+                    value={address}
+                    onChange={(v) => {
+                      setAddress(v);
+                      setLat(undefined);
+                      setLng(undefined);
+                    }}
+                    disabled={loading}
+                    compact
+                  />
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? (
-                <>
-                  <Spinner /> Checking solar potential…
-                </>
-              ) : (
-                "Check my roof"
-              )}
-            </button>
-            <p className="text-center text-xs text-[var(--muted-dim)]">
-              Demo smoke-test address only (do not auto-submit as a lead): 3100
-              Main Street, Bridgeport, CT 06606
-            </p>
-          </form>
+                  {error && (
+                    <ErrorBanner message={error} onRetry={() => runCheck()} />
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner /> Checking solar potential…
+                      </>
+                    ) : (
+                      "Check my roof"
+                    )}
+                  </button>
+                  <p className="text-center text-[10px] leading-snug text-[var(--muted-dim)] sm:text-xs">
+                    Demo smoke-test address only (do not auto-submit as a lead):
+                    3100 Main Street, Bridgeport, CT 06606
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
         </section>
       )}
 
