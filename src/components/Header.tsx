@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLockup } from "@/components/BrandMark";
 
 const PHONE = "203-818-3242";
 const TEL = "tel:+12038183242";
@@ -7,18 +8,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-        <Link href="/" className="group flex items-center gap-3">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--accent)] transition group-hover:border-[var(--accent)]/40">
-            <SunIcon />
-          </span>
-          <span className="flex flex-col leading-tight">
-            <span className="text-[15px] font-medium tracking-tight text-[var(--foreground)]">
-              Solar Entry
-            </span>
-            <span className="hidden text-[11px] tracking-wide text-[var(--muted-dim)] sm:block">
-              solarentry.com
-            </span>
-          </span>
+        <Link
+          href="/"
+          className="group inline-flex items-center transition-opacity hover:opacity-80"
+          aria-label="Solar Entry home"
+        >
+          <BrandLockup />
         </Link>
 
         <div className="flex items-center gap-3 sm:gap-5">
@@ -38,25 +33,6 @@ export function Header() {
         </div>
       </div>
     </header>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-4 w-4"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      aria-hidden
-    >
-      <circle cx="12" cy="12" r="3.5" />
-      <path
-        strokeLinecap="round"
-        d="M12 2.5v2M12 19.5v2M4.93 4.93l1.4 1.4M17.67 17.67l1.4 1.4M2.5 12h2M19.5 12h2M4.93 19.07l1.4-1.4M17.67 6.33l1.4-1.4"
-      />
-    </svg>
   );
 }
 

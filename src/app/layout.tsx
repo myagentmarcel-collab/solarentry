@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   description:
     "Free residential solar screening for Connecticut and US homeowners. Satellite-based roof check via Google Solar API. Call 203-818-3242.",
   metadataBase: new URL("https://solarentry.com"),
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
   openGraph: {
     title: "Solar Entry — Check your roof for solar",
     description:

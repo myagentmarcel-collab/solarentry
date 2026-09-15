@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLockup } from "@/components/BrandMark";
 
 const PHONE = "203-818-3242";
 const TEL = "tel:+12038183242";
@@ -8,10 +9,8 @@ export function Footer() {
     <footer className="mt-auto border-t border-[var(--border)] bg-[var(--background)]">
       <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div>
-          <p className="text-sm font-medium tracking-tight text-[var(--foreground)]">
-            Solar Entry
-          </p>
-          <p className="mt-1.5 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
+          <BrandLockup size="sm" />
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
             Residential solar screening for Connecticut &amp; US homeowners.
           </p>
           <p className="mt-2 text-xs tracking-wide text-[var(--muted-dim)]">
