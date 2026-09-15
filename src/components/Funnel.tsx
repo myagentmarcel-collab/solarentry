@@ -165,7 +165,7 @@ export function Funnel() {
         <section className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-[var(--border)] shadow-md sm:h-[440px] md:h-[500px]">
           <img
             src="/images/solar-cinematic.jpg"
-            alt="Modern white home with dark-framed picture windows and rooftop solar panels"
+            alt="Distant home with rooftop solar, sun shining through the trees"
             className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
             width={1280}
             height={720}
