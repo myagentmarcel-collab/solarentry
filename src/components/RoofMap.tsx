@@ -90,9 +90,9 @@ export function RoofMap({
             <polygon
               key={poly.key}
               points={poly.points}
-              fill="var(--accent)"
-              fillOpacity="0.55"
-              stroke="rgba(255, 255, 255, 0.95)"
+              fill="#0f172a"
+              fillOpacity="0.76"
+              stroke="rgba(226, 232, 240, 0.85)"
               strokeWidth="0.35"
               vectorEffect="non-scaling-stroke"
             />
