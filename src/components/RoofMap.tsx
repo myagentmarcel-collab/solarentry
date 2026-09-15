@@ -4,7 +4,12 @@ import { useMemo } from "react";
 import {
   PANEL_VISUAL_SCALE,
   boundsFromPanels,
-  buildSegmentArrayArt,
+  clusterHullSvgPoints,
+  groupPanelsBySegment,
+  panelRectToSvgPoints,
+  panelToRect,
+  regularizePanelsForDisplay,
+  sortPanelsForDraw,
   type MapBounds,
 } from "@/lib/panels";
 import type { SolarPanel } from "@/lib/types";
@@ -20,11 +25,13 @@ interface RoofMapProps {
 }
 
 /**
- * Renders Solar API solarPanels[] as connected roof-segment arrays on a
+ * Renders Solar API solarPanels[] as separate module rectangles on a
  * Google Maps Static satellite backdrop (or neutral grid fallback).
  *
- * Art direction: one filled convex-hull polygon per segment (black-glass +
- * silver stroke) with a subtle inner module grid — not separate floating tiles.
+ * Art direction: lightly regularize centers into neat rows/cols per roof
+ * segment, draw each panel slightly undersized (~90%) so thin gaps show,
+ * dark chic black-glass fill + silver stroke, optional thin unfilled
+ * outer outline for cohesion — not a solid connected blob.
  *
  * The container is square to match Static Maps size=640x640 so object-cover
  * does not crop the image relative to the overlay projection.
@@ -38,20 +45,63 @@ export function RoofMap({
   className = "",
 }: RoofMapProps) {
   // Prefer Static-Map viewport bounds over tight panel-only bounds.
+  // Bounds use original API centers (true size) so the photo frame stays aligned.
   const bounds = useMemo(() => {
     if (imageryBounds) return imageryBounds;
     return boundsFromPanels(panels, panelHeightMeters, panelWidthMeters);
   }, [imageryBounds, panels, panelHeightMeters, panelWidthMeters]);
 
-  const arrays = useMemo(() => {
-    if (!bounds || !panels.length) return [];
-    return buildSegmentArrayArt(
+  const { polygons, clusterOutlines } = useMemo(() => {
+    if (!bounds || !panels.length) {
+      return {
+        polygons: [] as { key: string; points: string }[],
+        clusterOutlines: [] as { key: string; points: string }[],
+      };
+    }
+
+    const displayPanels = regularizePanelsForDisplay(
       panels,
       panelHeightMeters,
-      panelWidthMeters,
-      bounds,
-      PANEL_VISUAL_SCALE
+      panelWidthMeters
     );
+    const ordered = sortPanelsForDraw(displayPanels);
+
+    const polygons = ordered.map((p, i) => {
+      const rect = panelToRect(
+        p,
+        panelHeightMeters,
+        panelWidthMeters,
+        PANEL_VISUAL_SCALE
+      );
+      const seg =
+        typeof p.segmentIndex === "number" ? `s${p.segmentIndex}` : "s";
+      return {
+        key: `${seg}-${i}-${p.center.latitude.toFixed(6)}-${p.center.longitude.toFixed(6)}`,
+        points: panelRectToSvgPoints(rect, bounds),
+      };
+    });
+
+    // Thin unfilled ring around each segment for cohesion (not a solid fill).
+    const clusters = groupPanelsBySegment(ordered);
+    const clusterOutlines = clusters
+      .map((group, i) => {
+        const points = clusterHullSvgPoints(
+          group,
+          panelHeightMeters,
+          panelWidthMeters,
+          bounds,
+          1
+        );
+        if (!points) return null;
+        const segKey =
+          typeof group[0]?.segmentIndex === "number"
+            ? group[0].segmentIndex
+            : i;
+        return { key: `hull-${segKey}`, points };
+      })
+      .filter((o): o is { key: string; points: string } => o != null);
+
+    return { polygons, clusterOutlines };
   }, [panels, panelHeightMeters, panelWidthMeters, bounds]);
 
   if (!bounds || !panels.length) {
@@ -88,51 +138,36 @@ export function RoofMap({
           className="absolute inset-0 h-full w-full"
           aria-label={`${panels.length} proposed solar panels`}
         >
-          <defs>
-            {arrays.map((arr) => (
-              <clipPath key={`clip-${arr.key}`} id={`clip-${arr.key}`}>
-                <polygon points={arr.hullPoints} />
-              </clipPath>
-            ))}
-          </defs>
-
-          {arrays.map((arr) => (
-            <g key={arr.key}>
-              {/* Single connected black-glass array fill */}
-              <polygon
-                points={arr.hullPoints}
-                fill="#0a0f1a"
-                fillOpacity="0.82"
-                stroke="rgba(226, 232, 240, 0.95)"
-                strokeWidth="0.55"
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
-              />
-              {/* Subtle module grid clipped to the hull */}
-              <g
-                clipPath={`url(#clip-${arr.key})`}
-                stroke="rgba(148, 163, 184, 0.22)"
-                strokeWidth="0.12"
-                strokeLinecap="butt"
-                vectorEffect="non-scaling-stroke"
-              >
-                {arr.gridLines.map((line, i) => (
-                  <line
-                    key={`${arr.key}-g${i}`}
-                    x1={line.x1}
-                    y1={line.y1}
-                    x2={line.x2}
-                    y2={line.y2}
-                  />
-                ))}
-              </g>
-            </g>
+          {/* Individual black-glass modules with small gaps between them */}
+          {polygons.map((poly) => (
+            <polygon
+              key={poly.key}
+              points={poly.points}
+              fill="#0a0f1a"
+              fillOpacity="0.82"
+              stroke="rgba(226, 232, 240, 0.88)"
+              strokeWidth="0.32"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+          {/* Very light outer outline for group cohesion — thin, not filled */}
+          {clusterOutlines.map((outline) => (
+            <polygon
+              key={outline.key}
+              points={outline.points}
+              fill="none"
+              stroke="rgba(241, 245, 249, 0.45)"
+              strokeWidth="0.28"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
           ))}
         </svg>
       </div>
       <div className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1.5">
         <div className="rounded-md bg-[var(--map-chrome)]/85 px-2 py-1 text-[11px] text-white backdrop-blur-sm">
-          {panels.length} panels · Solar API layout
+          {panels.length} panels · Approximate layout
         </div>
         {imageryUrl ? (
           <div className="rounded-md bg-[var(--map-chrome)]/85 px-2 py-1 text-[11px] text-white/90 backdrop-blur-sm">
