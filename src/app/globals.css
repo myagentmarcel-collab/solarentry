@@ -99,7 +99,7 @@ body {
   }
 }
 
-/* Thin focus ring — UN blue accent, high contrast */
+/* Thin focus ring — Pantone 485 accent, high contrast */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
