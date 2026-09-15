@@ -2,9 +2,13 @@
 
 import { useMemo } from "react";
 import {
+  PANEL_VISUAL_SCALE,
   boundsFromPanels,
+  clusterHullSvgPoints,
+  groupPanelsBySegment,
   panelRectToSvgPoints,
   panelToRect,
+  sortPanelsForDraw,
   type MapBounds,
 } from "@/lib/panels";
 import type { SolarPanel } from "@/lib/types";
@@ -24,6 +28,10 @@ interface RoofMapProps {
  * (center, orientationDegrees, height/width meters) as an SVG overlay
  * on a Google Maps Static satellite backdrop (or neutral grid fallback).
  *
+ * Art direction: slightly expanded black-glass tiles so edges kiss, soft
+ * per-panel strokes, and a stronger silver hull around each roof-segment
+ * cluster — still Solar API layout, not a fake grid.
+ *
  * The container is square to match Static Maps size=640x640 so object-cover
  * does not crop the image relative to the overlay projection.
  */
@@ -41,15 +49,47 @@ export function RoofMap({
     return boundsFromPanels(panels, panelHeightMeters, panelWidthMeters);
   }, [imageryBounds, panels, panelHeightMeters, panelWidthMeters]);
 
-  const polygons = useMemo(() => {
-    if (!bounds || !panels.length) return [];
-    return panels.map((p, i) => {
-      const rect = panelToRect(p, panelHeightMeters, panelWidthMeters);
+  const { polygons, clusterOutlines } = useMemo(() => {
+    if (!bounds || !panels.length) {
+      return { polygons: [] as { key: string; points: string }[], clusterOutlines: [] as { key: string; points: string }[] };
+    }
+
+    const ordered = sortPanelsForDraw(panels);
+    const polygons = ordered.map((p, i) => {
+      const rect = panelToRect(
+        p,
+        panelHeightMeters,
+        panelWidthMeters,
+        PANEL_VISUAL_SCALE
+      );
+      const seg =
+        typeof p.segmentIndex === "number" ? `s${p.segmentIndex}` : "s";
       return {
-        key: i,
+        key: `${seg}-${i}-${p.center.latitude.toFixed(6)}-${p.center.longitude.toFixed(6)}`,
         points: panelRectToSvgPoints(rect, bounds),
       };
     });
+
+    const clusters = groupPanelsBySegment(ordered);
+    const clusterOutlines = clusters
+      .map((group, i) => {
+        const points = clusterHullSvgPoints(
+          group,
+          panelHeightMeters,
+          panelWidthMeters,
+          bounds,
+          PANEL_VISUAL_SCALE
+        );
+        if (!points) return null;
+        const segKey =
+          typeof group[0]?.segmentIndex === "number"
+            ? group[0].segmentIndex
+            : i;
+        return { key: `hull-${segKey}`, points };
+      })
+      .filter((o): o is { key: string; points: string } => o != null);
+
+    return { polygons, clusterOutlines };
   }, [panels, panelHeightMeters, panelWidthMeters, bounds]);
 
   if (!bounds || !panels.length) {
@@ -86,14 +126,28 @@ export function RoofMap({
           className="absolute inset-0 h-full w-full"
           aria-label={`${panels.length} proposed solar panels`}
         >
+          {/* Connected black-glass tiles — expanded so edges kiss */}
           {polygons.map((poly) => (
             <polygon
               key={poly.key}
               points={poly.points}
               fill="#0f172a"
-              fillOpacity="0.76"
-              stroke="rgba(226, 232, 240, 0.85)"
-              strokeWidth="0.35"
+              fillOpacity="0.78"
+              stroke="rgba(226, 232, 240, 0.28)"
+              strokeWidth="0.18"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+          {/* Stronger outer ring per roof-segment cluster */}
+          {clusterOutlines.map((outline) => (
+            <polygon
+              key={outline.key}
+              points={outline.points}
+              fill="none"
+              stroke="rgba(241, 245, 249, 0.92)"
+              strokeWidth="0.55"
+              strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
           ))}

@@ -25,8 +25,16 @@ export interface PanelRect {
 }
 
 /**
+ * Visual-only size bump so adjacent Solar API panels kiss/overlap lightly.
+ * Does not change API layout truth or Static Maps bounds math.
+ */
+export const PANEL_VISUAL_SCALE = 1.06;
+
+/**
  * Build a rectangle for one solar panel from Google Solar API fields.
  * orientationDegrees is degrees clockwise from north (Google Solar docs).
+ *
+ * `visualScale` expands the drawn rect around the API center (art direction only).
  */
 export function resolveOrientationDegrees(panel: SolarPanel): number {
   if (
@@ -42,7 +50,8 @@ export function resolveOrientationDegrees(panel: SolarPanel): number {
 export function panelToRect(
   panel: SolarPanel,
   heightMeters: number,
-  widthMeters: number
+  widthMeters: number,
+  visualScale = 1
 ): PanelRect {
   const { latitude, longitude } = panel.center;
   let h = heightMeters;
@@ -52,8 +61,9 @@ export function panelToRect(
     h = widthMeters;
     w = heightMeters;
   }
-  const halfH = h / 2;
-  const halfW = w / 2;
+  const scale = Number.isFinite(visualScale) && visualScale > 0 ? visualScale : 1;
+  const halfH = (h / 2) * scale;
+  const halfW = (w / 2) * scale;
 
   // Local offsets in meters relative to panel axes (before rotation):
   // height along orientation (north when orientation=0), width perpendicular.
@@ -150,6 +160,106 @@ export function panelRectToSvgPoints(
     .join(" ");
 }
 
+export interface SvgPoint {
+  x: number;
+  y: number;
+}
+
+/** Stable north→south, west→east draw order (avoids random-looking stacking). */
+export function sortPanelsForDraw(panels: SolarPanel[]): SolarPanel[] {
+  return [...panels].sort((a, b) => {
+    const dLat = b.center.latitude - a.center.latitude;
+    if (Math.abs(dLat) > 1e-12) return dLat;
+    return a.center.longitude - b.center.longitude;
+  });
+}
+
+/**
+ * Group panels by roof segment when segmentIndex is present; otherwise one cluster.
+ */
+export function groupPanelsBySegment(panels: SolarPanel[]): SolarPanel[][] {
+  const hasSegment = panels.some((p) => typeof p.segmentIndex === "number");
+  if (!hasSegment) return [panels];
+
+  const map = new Map<number, SolarPanel[]>();
+  for (const p of panels) {
+    const key = typeof p.segmentIndex === "number" ? p.segmentIndex : -1;
+    const list = map.get(key);
+    if (list) list.push(p);
+    else map.set(key, [p]);
+  }
+
+  return [...map.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([, group]) => group);
+}
+
+/** Andrew's monotone chain convex hull in SVG space (counter-clockwise). */
+export function convexHullSvg(points: SvgPoint[]): SvgPoint[] {
+  if (points.length <= 1) return points.slice();
+  const sorted = [...points].sort((a, b) =>
+    a.x === b.x ? a.y - b.y : a.x - b.x
+  );
+
+  const cross = (o: SvgPoint, a: SvgPoint, b: SvgPoint) =>
+    (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+
+  const lower: SvgPoint[] = [];
+  for (const p of sorted) {
+    while (
+      lower.length >= 2 &&
+      cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0
+    ) {
+      lower.pop();
+    }
+    lower.push(p);
+  }
+
+  const upper: SvgPoint[] = [];
+  for (let i = sorted.length - 1; i >= 0; i--) {
+    const p = sorted[i];
+    while (
+      upper.length >= 2 &&
+      cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0
+    ) {
+      upper.pop();
+    }
+    upper.push(p);
+  }
+
+  lower.pop();
+  upper.pop();
+  return lower.concat(upper);
+}
+
+export function svgPointsToAttr(points: SvgPoint[]): string {
+  return points.map((p) => `${p.x},${p.y}`).join(" ");
+}
+
+/**
+ * Convex-hull outline for a panel cluster in SVG viewBox space.
+ * Uses visually scaled rects so the ring sits on the connected array edge.
+ */
+export function clusterHullSvgPoints(
+  panels: SolarPanel[],
+  heightMeters: number,
+  widthMeters: number,
+  bounds: MapBounds,
+  visualScale = PANEL_VISUAL_SCALE
+): string | null {
+  if (!panels.length) return null;
+  const pts: SvgPoint[] = [];
+  for (const p of panels) {
+    const rect = panelToRect(p, heightMeters, widthMeters, visualScale);
+    for (const c of rect.corners) {
+      pts.push(latLngToSvg(c, bounds));
+    }
+  }
+  const hull = convexHullSvg(pts);
+  if (hull.length < 3) return null;
+  return svgPointsToAttr(hull);
+}
+
 /** Expand bounds to include all panels with a small padding. */
 export function boundsFromPanels(
   panels: SolarPanel[],
@@ -159,6 +269,7 @@ export function boundsFromPanels(
 ): MapBounds | null {
   if (!panels.length) return null;
 
+  // True API size only — never bake visualScale into Static Maps / fallback bounds.
   const rects = panels.map((p) => panelToRect(p, heightMeters, widthMeters));
   let north = -Infinity;
   let south = Infinity;
