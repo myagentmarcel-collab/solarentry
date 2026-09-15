@@ -14,6 +14,7 @@ interface RoofMapProps {
   panelHeightMeters: number;
   panelWidthMeters: number;
   imageryUrl: string | null;
+  /** Prefer Static Maps viewport bounds so SVG matches the photo frame. */
   imageryBounds: MapBounds | null;
   className?: string;
 }
@@ -22,6 +23,9 @@ interface RoofMapProps {
  * Renders actual panel rectangles from Google Solar API solarPanels[]
  * (center, orientationDegrees, height/width meters) as an SVG overlay
  * on a Google Maps Static satellite backdrop (or neutral grid fallback).
+ *
+ * The container is square to match Static Maps size=640x640 so object-cover
+ * does not crop the image relative to the overlay projection.
  */
 export function RoofMap({
   panels,
@@ -31,6 +35,7 @@ export function RoofMap({
   imageryBounds,
   className = "",
 }: RoofMapProps) {
+  // Prefer Static-Map viewport bounds over tight panel-only bounds.
   const bounds = useMemo(() => {
     if (imageryBounds) return imageryBounds;
     return boundsFromPanels(panels, panelHeightMeters, panelWidthMeters);
@@ -50,7 +55,7 @@ export function RoofMap({
   if (!bounds || !panels.length) {
     return (
       <div
-        className={`flex aspect-[4/3] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-100 text-sm text-slate-500 ${className}`}
+        className={`flex aspect-square items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-100 text-sm text-slate-500 ${className}`}
       >
         No panel layout available for this building.
       </div>
@@ -61,7 +66,7 @@ export function RoofMap({
     <div
       className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-800 shadow-inner ${className}`}
     >
-      <div className="relative aspect-[4/3] w-full">
+      <div className="relative aspect-square w-full">
         {imageryUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -77,7 +82,7 @@ export function RoofMap({
 
         <svg
           viewBox="0 0 100 100"
-          preserveAspectRatio="none"
+          preserveAspectRatio="xMidYMid meet"
           className="absolute inset-0 h-full w-full"
           aria-label={`${panels.length} proposed solar panels`}
         >
@@ -99,7 +104,7 @@ export function RoofMap({
         </div>
         {imageryUrl ? (
           <div className="rounded-md bg-black/55 px-2 py-1 text-[11px] text-white/90 backdrop-blur-sm">
-            Satellite backdrop via Google Maps; panel layout from Solar API
+            Overlay aligned to Static Maps viewport; approximate — not a survey
           </div>
         ) : null}
       </div>

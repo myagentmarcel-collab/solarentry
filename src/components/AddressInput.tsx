@@ -21,7 +21,7 @@ export function AddressInput({
     <div className="w-full">
       <label
         htmlFor={id}
-        className="mb-1.5 block text-sm font-medium text-slate-700"
+        className="mb-2 block text-sm font-medium text-[var(--muted)]"
       >
         Home address (US)
       </label>
@@ -33,9 +33,9 @@ export function AddressInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 shadow-sm outline-none ring-sky-500/0 transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/15 disabled:bg-slate-50"
+        className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-50"
       />
-      <p className="mt-1.5 text-xs text-slate-500">
+      <p className="mt-2 text-xs text-[var(--muted-dim)]">
         Enter full street address (city, state, ZIP); we’ll look it up on submit.
       </p>
     </div>

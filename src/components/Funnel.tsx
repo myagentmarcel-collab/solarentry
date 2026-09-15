@@ -162,17 +162,17 @@ export function Funnel() {
       <StepIndicator step={step} />
 
       {step === "address" && (
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
+          <h1 className="text-3xl font-medium tracking-tight text-white sm:text-4xl sm:leading-[1.15]">
             Check your roof for solar
           </h1>
-          <p className="mt-2 text-slate-600">
-            Free satellite screening for Connecticut &amp; US homeowners. Enter
-            your address to see estimated sun hours, usable roof area, and a
-            panel layout from Google Solar data.
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted)]">
+            Free satellite screening for Connecticut &amp; US homeowners.
+            Enter your address to see sun hours, usable roof area, and a panel
+            layout.
           </p>
 
-          <form onSubmit={runCheck} className="mt-6 space-y-5">
+          <form onSubmit={runCheck} className="mt-8 space-y-6">
             <AddressInput
               value={address}
               onChange={(v) => {
@@ -188,7 +188,7 @@ export function Funnel() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-sky-700 px-4 py-3.5 text-base font-semibold text-white shadow-md shadow-sky-200 transition hover:from-sky-700 hover:to-sky-800 disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-black transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -198,7 +198,7 @@ export function Funnel() {
                 "Check my roof"
               )}
             </button>
-            <p className="text-center text-xs text-slate-400">
+            <p className="text-center text-xs text-[var(--muted-dim)]">
               Demo smoke-test address only (do not auto-submit as a lead): 3100
               Main Street, Bridgeport, CT 06606
             </p>
@@ -208,21 +208,23 @@ export function Funnel() {
 
       {step === "result" && result && (
         <section className="space-y-5">
-          <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+          <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-sm text-slate-500">Results for</p>
-                <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
+                <p className="text-xs font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
+                  Results for
+                </p>
+                <h2 className="mt-1 text-lg font-medium tracking-tight text-white sm:text-xl">
                   {result.address}
                 </h2>
               </div>
               <SuitabilityBadge value={result.suitability} />
             </div>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
               {result.suitabilityReason}
             </p>
 
-            <div className="mt-5">
+            <div className="mt-6">
               <RoofMap
                 panels={result.panels}
                 panelHeightMeters={result.panelHeightMeters}
@@ -232,7 +234,7 @@ export function Funnel() {
               />
             </div>
 
-            <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <Stat
                 label="Sun hours / yr"
                 value={Math.round(result.sunHours).toLocaleString()}
@@ -245,17 +247,17 @@ export function Funnel() {
               <Stat label="System size" value={`${result.systemSizeKw} kW`} />
             </dl>
 
-            <p className="mt-3 text-xs text-slate-500">
+            <p className="mt-4 text-xs leading-relaxed text-[var(--muted-dim)]">
               Est. yearly DC energy (mid config):{" "}
               {result.yearlyEnergyDcKwh.toLocaleString()} kWh.{" "}
               {result.disclaimer}
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={() => setStep("consult")}
-                className="flex-1 rounded-xl bg-amber-500 px-4 py-3.5 text-center text-base font-semibold text-slate-900 shadow-sm transition hover:bg-amber-400"
+                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-center text-base font-medium text-black transition hover:bg-zinc-100"
               >
                 Request a free consult
               </button>
@@ -266,7 +268,7 @@ export function Funnel() {
                   setResult(null);
                   setError(null);
                 }}
-                className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-base font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3.5 text-base font-medium text-[var(--muted)] transition hover:border-white/20 hover:text-white"
               >
                 Try another address
               </button>
@@ -276,24 +278,23 @@ export function Funnel() {
       )}
 
       {step === "consult" && (
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">
+        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
+          <h2 className="text-2xl font-medium tracking-tight text-white sm:text-3xl">
             Schedule a consult
           </h2>
-          <p className="mt-1 text-slate-600">
+          <p className="mt-3 text-[var(--muted)] leading-relaxed">
             Share how to reach you. We’ll confirm by phone or email.
             Prefer to talk now?{" "}
-            <a href={TEL} className="font-medium text-sky-700 hover:underline">
+            <a
+              href={TEL}
+              className="font-medium text-white underline decoration-[var(--border)] underline-offset-2 transition hover:text-[var(--accent)]"
+            >
               {PHONE_DISPLAY}
             </a>
           </p>
 
-          <form onSubmit={submitLead} className="mt-6 space-y-4">
-            <Field
-              label="Phone"
-              error={formErrors.phone}
-              htmlFor="phone"
-            >
+          <form onSubmit={submitLead} className="mt-8 space-y-4">
+            <Field label="Phone" error={formErrors.phone} htmlFor="phone">
               <input
                 id="phone"
                 type="tel"
@@ -373,14 +374,14 @@ export function Funnel() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 rounded-xl bg-sky-700 px-4 py-3.5 text-base font-semibold text-white hover:bg-sky-800 disabled:opacity-70"
+                className="flex-1 rounded-lg bg-white px-4 py-3.5 text-base font-medium text-black transition hover:bg-zinc-100 disabled:opacity-60"
               >
                 {loading ? "Sending…" : "Submit request"}
               </button>
               <button
                 type="button"
                 onClick={() => setStep("result")}
-                className="rounded-xl border border-slate-300 px-4 py-3.5 font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg border border-[var(--border)] px-4 py-3.5 font-medium text-[var(--muted)] transition hover:border-white/20 hover:text-white"
               >
                 Back
               </button>
@@ -390,33 +391,33 @@ export function Funnel() {
       )}
 
       {step === "thanks" && (
-        <section className="rounded-3xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-white p-5 text-center shadow-sm sm:p-10">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:p-12">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--success-bg)] text-[var(--success)]">
             <svg
               viewBox="0 0 24 24"
-              className="h-7 w-7"
+              className="h-5 w-5"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="2"
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </div>
-          <h2 className="mt-4 text-2xl font-semibold text-slate-900">
+          <h2 className="mt-5 text-2xl font-medium tracking-tight text-white sm:text-3xl">
             Thank you — request received
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-slate-600">
+          <p className="mx-auto mt-3 max-w-md text-[var(--muted)] leading-relaxed">
             Someone from Solar Entry will follow up about your consult. Questions
             sooner? Call us anytime.
           </p>
           <a
             href={TEL}
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-sky-700 px-5 py-3 text-base font-semibold text-white hover:bg-sky-800"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-5 py-3 text-base font-medium tabular-nums tracking-tight text-white transition hover:border-[var(--accent)]/40"
           >
             {PHONE_DISPLAY}
           </a>
           {leadNote && (
-            <p className="mx-auto mt-4 max-w-md text-xs text-slate-500">
+            <p className="mx-auto mt-4 max-w-md text-xs text-[var(--muted-dim)]">
               {leadNote}
             </p>
           )}
@@ -431,7 +432,7 @@ export function Funnel() {
               setPreferredTime("");
               setLeadNote(null);
             }}
-            className="mt-6 text-sm font-medium text-sky-700 hover:underline"
+            className="mt-8 text-sm font-medium text-[var(--muted)] transition hover:text-white"
           >
             Check another address
           </button>
@@ -442,7 +443,7 @@ export function Funnel() {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 shadow-sm outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/15";
+  "w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5 text-white outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20";
 
 function Field({
   label,
@@ -459,23 +460,25 @@ function Field({
     <div>
       <label
         htmlFor={htmlFor}
-        className="mb-1 block text-sm font-medium text-slate-700"
+        className="mb-1.5 block text-sm font-medium text-[var(--muted)]"
       >
         {label}
       </label>
       {children}
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && (
+        <p className="mt-1.5 text-sm text-[var(--danger)]">{error}</p>
+      )}
     </div>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-3">
-      <dt className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
+    <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3 py-3.5">
+      <dt className="text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
         {label}
       </dt>
-      <dd className="mt-0.5 text-lg font-semibold tabular-nums text-slate-900">
+      <dd className="mt-1 text-lg font-medium tabular-nums tracking-tight text-white">
         {value}
       </dd>
     </div>
@@ -485,13 +488,13 @@ function Stat({ label, value }: { label: string; value: string }) {
 function SuitabilityBadge({ value }: { value: string }) {
   const styles =
     value === "Good"
-      ? "bg-emerald-100 text-emerald-800 ring-emerald-200"
+      ? "border-[var(--success)]/30 bg-[var(--success-bg)] text-[var(--success)]"
       : value === "Fair"
-        ? "bg-amber-100 text-amber-900 ring-amber-200"
-        : "bg-slate-200 text-slate-800 ring-slate-300";
+        ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+        : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted)]";
   return (
     <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${styles}`}
+      className={`inline-flex items-center rounded-lg border px-3 py-1 text-sm font-medium ${styles}`}
     >
       {value} fit
     </span>
@@ -509,23 +512,23 @@ function StepIndicator({ step }: { step: Step }) {
   const current = order.indexOf(step);
 
   return (
-    <ol className="mb-6 flex items-center justify-center gap-1 sm:gap-2">
+    <ol className="mb-8 flex items-center justify-center gap-1 sm:gap-2">
       {steps.map((s, i) => {
         const active = i <= current;
         return (
           <li key={s.id} className="flex items-center gap-1 sm:gap-2">
             <span
-              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
+              className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-medium tabular-nums ${
                 active
-                  ? "bg-sky-700 text-white"
-                  : "bg-slate-200 text-slate-500"
+                  ? "bg-white text-black"
+                  : "border border-[var(--border)] text-[var(--muted-dim)]"
               }`}
             >
               {i + 1}
             </span>
             <span
               className={`hidden text-xs font-medium sm:inline ${
-                active ? "text-slate-800" : "text-slate-400"
+                active ? "text-white" : "text-[var(--muted-dim)]"
               }`}
             >
               {s.label}
@@ -533,7 +536,7 @@ function StepIndicator({ step }: { step: Step }) {
             {i < steps.length - 1 && (
               <span
                 className={`mx-1 h-px w-4 sm:w-8 ${
-                  i < current ? "bg-sky-600" : "bg-slate-200"
+                  i < current ? "bg-white/40" : "bg-[var(--border)]"
                 }`}
               />
             )}
@@ -554,14 +557,14 @@ function ErrorBanner({
   return (
     <div
       role="alert"
-      className="flex flex-col gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-2 rounded-lg border border-[var(--danger)]/30 bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger)] sm:flex-row sm:items-center sm:justify-between"
     >
       <p>{message}</p>
       {onRetry && (
         <button
           type="button"
           onClick={onRetry}
-          className="shrink-0 font-semibold text-red-900 underline"
+          className="shrink-0 font-medium text-white underline underline-offset-2"
         >
           Retry
         </button>

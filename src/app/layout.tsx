@@ -40,10 +40,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col bg-background text-foreground antialiased`}
       >
         <Header />
-        <main className="flex-1 px-4 py-8 sm:px-6 sm:py-12">{children}</main>
+        <main className="flex-1 px-4 py-10 sm:px-6 sm:py-16">{children}</main>
         <Footer />
       </body>
     </html>
