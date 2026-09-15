@@ -18,9 +18,9 @@ export function BrandMark({
     >
       {title ? <title>{title}</title> : null}
       {/* Core disc */}
-      <circle cx="16" cy="16" r="5.25" fill="#009EDB" />
+      <circle cx="16" cy="16" r="5.25" fill="#2E5AEC" />
       {/* Geometric rays — short rectangles at 45° increments */}
-      <g fill="#009EDB">
+      <g fill="#2E5AEC">
         <rect x="14.75" y="2" width="2.5" height="5" rx="0.4" />
         <rect x="14.75" y="25" width="2.5" height="5" rx="0.4" />
         <rect x="2" y="14.75" width="5" height="2.5" rx="0.4" />
@@ -76,7 +76,7 @@ export function BrandWordmark({
 
   return (
     <span
-      className={`select-none inline-flex items-baseline gap-[0.28em] text-[#009EDB] ${scale} ${className}`}
+      className={`select-none inline-flex items-baseline gap-[0.28em] text-[#2E5AEC] ${scale} ${className}`}
       style={{ letterSpacing: "-0.02em" }}
     >
       <span className="font-extrabold">Solar</span>
