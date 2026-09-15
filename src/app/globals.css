@@ -44,7 +44,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Bright solar photo with a light fade for readable content below */
+/* Classy cinematic solar home — full-bleed cover with light vignette */
 .site-solar-bg {
   pointer-events: none;
   position: absolute;
@@ -52,19 +52,27 @@ body {
   z-index: 0;
   height: min(72vh, 720px);
   background-image:
+    /* Soft fade only near bottom so content cards stay readable */
     linear-gradient(
       180deg,
-      rgba(255, 244, 214, 0.18) 0%,
-      rgba(255, 249, 227, 0.14) 32%,
-      rgba(244, 249, 252, 0.42) 68%,
-      rgba(244, 249, 252, 0.72) 100%
+      transparent 0%,
+      transparent 55%,
+      rgba(244, 249, 252, 0.35) 78%,
+      rgba(244, 249, 252, 0.85) 100%
     ),
-    url("/images/solar-home.jpg");
-  background-blend-mode: screen, normal;
-  background-size: cover;
-  background-position: center 32%;
+    /* Light cinematic vignette — darker edges, clear center */
+    radial-gradient(
+      ellipse 85% 75% at 50% 40%,
+      transparent 0%,
+      transparent 45%,
+      rgba(8, 18, 28, 0.22) 78%,
+      rgba(8, 18, 28, 0.42) 100%
+    ),
+    url("/images/solar-cinematic.jpg");
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
   background-repeat: no-repeat;
-  filter: saturate(1.12) contrast(1.04) brightness(1.06);
+  filter: saturate(1.08) contrast(1.06) brightness(1.02);
 }
 
 @media (max-width: 640px) {
@@ -73,14 +81,21 @@ body {
     background-image:
       linear-gradient(
         180deg,
-        rgba(255, 244, 214, 0.24) 0%,
-        rgba(255, 249, 227, 0.2) 40%,
-        rgba(244, 249, 252, 0.52) 75%,
-        rgba(244, 249, 252, 0.78) 100%
+        transparent 0%,
+        transparent 48%,
+        rgba(244, 249, 252, 0.4) 72%,
+        rgba(244, 249, 252, 0.88) 100%
       ),
-      url("/images/solar-home.jpg");
-    background-blend-mode: screen, normal;
-    background-position: center 28%;
+      radial-gradient(
+        ellipse 90% 80% at 50% 38%,
+        transparent 0%,
+        transparent 42%,
+        rgba(8, 18, 28, 0.24) 76%,
+        rgba(8, 18, 28, 0.45) 100%
+      ),
+      url("/images/solar-cinematic.jpg");
+    background-size: cover, cover, cover;
+    background-position: center, center, center;
   }
 }
 
