@@ -28,7 +28,7 @@ export interface PanelRect {
  * Visual-only size bump so adjacent Solar API panels kiss/overlap lightly.
  * Does not change API layout truth or Static Maps bounds math.
  */
-export const PANEL_VISUAL_SCALE = 1.06;
+export const PANEL_VISUAL_SCALE = 1.08;
 
 /**
  * Build a rectangle for one solar panel from Google Solar API fields.
@@ -237,16 +237,15 @@ export function svgPointsToAttr(points: SvgPoint[]): string {
 }
 
 /**
- * Convex-hull outline for a panel cluster in SVG viewBox space.
- * Uses visually scaled rects so the ring sits on the connected array edge.
+ * Convex hull of visually scaled panel corners for a cluster (SVG space).
  */
-export function clusterHullSvgPoints(
+export function clusterHullPoints(
   panels: SolarPanel[],
   heightMeters: number,
   widthMeters: number,
   bounds: MapBounds,
   visualScale = PANEL_VISUAL_SCALE
-): string | null {
+): SvgPoint[] | null {
   if (!panels.length) return null;
   const pts: SvgPoint[] = [];
   for (const p of panels) {
@@ -257,7 +256,195 @@ export function clusterHullSvgPoints(
   }
   const hull = convexHullSvg(pts);
   if (hull.length < 3) return null;
-  return svgPointsToAttr(hull);
+  return hull;
+}
+
+/**
+ * Convex-hull outline for a panel cluster in SVG viewBox space.
+ * Uses visually scaled rects so the ring sits on the connected array edge.
+ */
+export function clusterHullSvgPoints(
+  panels: SolarPanel[],
+  heightMeters: number,
+  widthMeters: number,
+  bounds: MapBounds,
+  visualScale = PANEL_VISUAL_SCALE
+): string | null {
+  const hull = clusterHullPoints(
+    panels,
+    heightMeters,
+    widthMeters,
+    bounds,
+    visualScale
+  );
+  return hull ? svgPointsToAttr(hull) : null;
+}
+
+export interface SvgLine {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+export interface SegmentArrayArt {
+  key: string;
+  hullPoints: string;
+  gridLines: SvgLine[];
+}
+
+/** Map a local east/north meter offset from a reference lat/lng into SVG deltas. */
+function meterOffsetToSvgDelta(
+  eastMeters: number,
+  northMeters: number,
+  ref: LatLng,
+  bounds: MapBounds
+): SvgPoint {
+  const point: LatLng = {
+    latitude: ref.latitude + metersToLatDegrees(northMeters),
+    longitude: ref.longitude + metersToLngDegrees(eastMeters, ref.latitude),
+  };
+  const a = latLngToSvg(ref, bounds);
+  const b = latLngToSvg(point, bounds);
+  return { x: b.x - a.x, y: b.y - a.y };
+}
+
+/**
+ * Artistic module grid inside a cluster hull: thin lines spaced by average
+ * panel height/width along the array orientation. Clipped by the hull in SVG.
+ */
+export function clusterModuleGridLines(
+  panels: SolarPanel[],
+  heightMeters: number,
+  widthMeters: number,
+  bounds: MapBounds,
+  hull: SvgPoint[]
+): SvgLine[] {
+  if (!panels.length || hull.length < 3) return [];
+
+  const ref: LatLng = {
+    latitude:
+      panels.reduce((s, p) => s + p.center.latitude, 0) / panels.length,
+    longitude:
+      panels.reduce((s, p) => s + p.center.longitude, 0) / panels.length,
+  };
+
+  const avgOrientation =
+    panels.reduce((s, p) => s + resolveOrientationDegrees(p), 0) /
+    panels.length;
+  const rad = (avgOrientation * Math.PI) / 180;
+  const sin = Math.sin(rad);
+  const cos = Math.cos(rad);
+
+  // Unit axes in meters: height along orientation, width perpendicular.
+  // Geo: east = x*cos + y*sin, north = -x*sin + y*cos (same as panelToRect).
+  // For +1m along height (y): east=sin, north=cos
+  // For +1m along width (x): east=cos, north=-sin
+  const uH = meterOffsetToSvgDelta(sin, cos, ref, bounds); // height axis
+  const uW = meterOffsetToSvgDelta(cos, -sin, ref, bounds); // width axis
+
+  const lenH = Math.hypot(uH.x, uH.y) || 1;
+  const lenW = Math.hypot(uW.x, uW.y) || 1;
+  const nH = { x: uH.x / lenH, y: uH.y / lenH };
+  const nW = { x: uW.x / lenW, y: uW.y / lenW };
+
+  // Typical panel step in SVG (LANDSCAPE: heightMeters along H, widthMeters along W).
+  // Artistic: use average of API size; PORTRAIT mix is rare enough to ignore here.
+  const stepH = lenH * Math.max(heightMeters, 0.5);
+  const stepW = lenW * Math.max(widthMeters, 0.5);
+
+  let minH = Infinity;
+  let maxH = -Infinity;
+  let minW = Infinity;
+  let maxW = -Infinity;
+  for (const p of hull) {
+    const h = p.x * nH.x + p.y * nH.y;
+    const w = p.x * nW.x + p.y * nW.y;
+    minH = Math.min(minH, h);
+    maxH = Math.max(maxH, h);
+    minW = Math.min(minW, w);
+    maxW = Math.max(maxW, w);
+  }
+
+  // Slight inset so grid does not hug the outer silver stroke.
+  const inset = Math.min(stepH, stepW) * 0.08;
+  minH += inset;
+  maxH -= inset;
+  minW += inset;
+  maxW -= inset;
+  if (maxH <= minH || maxW <= minW) return [];
+
+  const lines: SvgLine[] = [];
+  const extend = Math.max(maxH - minH, maxW - minW) + stepH + stepW;
+
+  // Lines parallel to width axis (row separators) — spaced by panel height.
+  const h0 = Math.ceil(minH / stepH) * stepH;
+  for (let h = h0; h <= maxH + 1e-9; h += stepH) {
+    lines.push({
+      x1: nH.x * h + nW.x * (minW - extend),
+      y1: nH.y * h + nW.y * (minW - extend),
+      x2: nH.x * h + nW.x * (maxW + extend),
+      y2: nH.y * h + nW.y * (maxW + extend),
+    });
+  }
+
+  // Lines parallel to height axis (column separators) — spaced by panel width.
+  const w0 = Math.ceil(minW / stepW) * stepW;
+  for (let w = w0; w <= maxW + 1e-9; w += stepW) {
+    lines.push({
+      x1: nW.x * w + nH.x * (minH - extend),
+      y1: nW.y * w + nH.y * (minH - extend),
+      x2: nW.x * w + nH.x * (maxH + extend),
+      y2: nW.y * w + nH.y * (maxH + extend),
+    });
+  }
+
+  // Cap density so huge roofs stay readable.
+  return lines.length > 120 ? lines.slice(0, 120) : lines;
+}
+
+/**
+ * Per-segment connected array art: filled convex hull + inner module grid.
+ * Does not invent panels outside Solar API centers — hull is from real corners.
+ */
+export function buildSegmentArrayArt(
+  panels: SolarPanel[],
+  heightMeters: number,
+  widthMeters: number,
+  bounds: MapBounds,
+  visualScale = PANEL_VISUAL_SCALE
+): SegmentArrayArt[] {
+  const ordered = sortPanelsForDraw(panels);
+  const groups = groupPanelsBySegment(ordered);
+  const arrays: SegmentArrayArt[] = [];
+
+  groups.forEach((group, i) => {
+    const hull = clusterHullPoints(
+      group,
+      heightMeters,
+      widthMeters,
+      bounds,
+      visualScale
+    );
+    if (!hull) return;
+    const segKey =
+      typeof group[0]?.segmentIndex === "number"
+        ? group[0].segmentIndex
+        : i;
+    arrays.push({
+      key: `array-${segKey}`,
+      hullPoints: svgPointsToAttr(hull),
+      gridLines: clusterModuleGridLines(
+        group,
+        heightMeters,
+        widthMeters,
+        bounds,
+        hull
+      ),
+    });
+  });
+
+  return arrays;
 }
 
 /** Expand bounds to include all panels with a small padding. */
