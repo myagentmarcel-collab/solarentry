@@ -12,22 +12,28 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Solar Entry — Check your roof for solar",
+    default: "Check Your Roof for Solar | Free Consult | Solar Entry",
     template: "%s | Solar Entry",
   },
   description:
-    "Free residential solar screening for Connecticut and US homeowners. Satellite-based roof check via Google Solar API. Call 203-818-3242.",
+    "Free satellite screening shows if your roof is fit for solar. See results for your home, then book a free consultation. Call Solar Entry: 203-818-3242.",
   metadataBase: new URL("https://solarentry.com"),
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
-    title: "Solar Entry — Check your roof for solar",
+    title: "Check Your Roof for Solar | Free Consult | Solar Entry",
     description:
-      "Clean, trustworthy solar screening for CT/US homeowners. Call 203-818-3242.",
+      "Free satellite screening shows if your roof is fit for solar. See results for your home, then book a free consultation. Call Solar Entry: 203-818-3242.",
     url: "https://solarentry.com",
     siteName: "Solar Entry",
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Check Your Roof for Solar | Free Consult | Solar Entry",
+    description:
+      "Free satellite screening shows if your roof is fit for solar. See results for your home, then book a free consultation. Call Solar Entry: 203-818-3242.",
   },
 };
 
