@@ -162,73 +162,65 @@ export function Funnel() {
       <StepIndicator step={step} />
 
       {step === "address" && (
-        <section className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-[var(--border)] shadow-md sm:h-[440px] md:h-[500px]">
+        <section className="relative min-h-[420px] w-full overflow-hidden rounded-2xl sm:min-h-[480px] md:min-h-[540px]">
           <img
             src="/images/solar-cinematic.jpg"
             alt="Distant home with rooftop solar, sun shining through the trees"
-            className="absolute inset-0 h-full w-full object-cover object-[center_40%]"
+            className="absolute inset-0 h-full w-full object-cover object-[center_40%] brightness-[0.92] contrast-[1.05] saturate-[1.05]"
             width={1280}
             height={720}
             decoding="async"
             fetchPriority="high"
           />
-          {/* Soft vignette so the window card stays readable */}
+          {/* Stronger bottom veil so the card sits clearly on the photo */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10"
+            className="absolute inset-0 bg-gradient-to-t from-stone-950/55 via-stone-950/20 to-stone-950/5"
           />
 
-          {/* Window-pane card — right-center over picture windows on desktop; centered on mobile */}
-          <div className="absolute inset-x-3 bottom-4 top-auto z-10 sm:inset-auto sm:bottom-auto sm:left-[48%] sm:right-[4%] sm:top-[18%] md:left-[50%] md:right-[5%] md:top-[16%]">
-            <div className="relative overflow-hidden rounded-sm border-[5px] border-[#1a1a1a] shadow-[0_12px_40px_rgba(0,0,0,0.35)] sm:border-[6px]">
-              {/* Inner glass lip — suggests window pane without crossing the form */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-[3px] z-10 rounded-[1px] border border-white/40 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.18)]"
-              />
-              <div className="relative z-20 bg-white/80 p-4 backdrop-blur-md sm:p-5 md:p-6">
-                <h1 className="text-xl font-medium tracking-tight text-[var(--foreground)] sm:text-2xl md:text-[1.65rem] md:leading-snug">
-                  Check your roof for solar
-                </h1>
-                <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
-                  Free satellite screening for CT &amp; US homeowners.
-                </p>
+          {/* Soft contemporary form card — no heavy frame */}
+          <div className="absolute inset-x-3 bottom-4 z-10 sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-[min(100%-2rem,28rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 md:w-[min(100%-2rem,30rem)]">
+            <div className="rounded-2xl border border-white/70 bg-white/95 p-5 shadow-[0_4px_24px_rgba(28,25,23,0.12)] backdrop-blur-sm sm:p-7 md:p-8">
+              <h1 className="text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl md:text-[2rem] md:leading-tight">
+                Check your roof for solar
+              </h1>
+              <p className="mt-2.5 text-sm leading-relaxed text-[var(--muted)] sm:text-[15px]">
+                Free satellite screening for CT &amp; US homeowners.
+              </p>
 
-                <form onSubmit={runCheck} className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
-                  <AddressInput
-                    value={address}
-                    onChange={(v) => {
-                      setAddress(v);
-                      setLat(undefined);
-                      setLng(undefined);
-                    }}
-                    disabled={loading}
-                    compact
-                  />
+              <form onSubmit={runCheck} className="mt-5 space-y-4 sm:mt-6">
+                <AddressInput
+                  value={address}
+                  onChange={(v) => {
+                    setAddress(v);
+                    setLat(undefined);
+                    setLng(undefined);
+                  }}
+                  disabled={loading}
+                  compact
+                />
 
-                  {error && (
-                    <ErrorBanner message={error} onRetry={() => runCheck()} />
+                {error && (
+                  <ErrorBanner message={error} onRetry={() => runCheck()} />
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-white shadow-sm transition hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? (
+                    <>
+                      <Spinner /> Checking solar potential…
+                    </>
+                  ) : (
+                    "Check my roof"
                   )}
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {loading ? (
-                      <>
-                        <Spinner /> Checking solar potential…
-                      </>
-                    ) : (
-                      "Check my roof"
-                    )}
-                  </button>
-                  <p className="text-center text-[10px] leading-snug text-[var(--muted-dim)] sm:text-xs">
-                    Demo smoke-test address only (do not auto-submit as a lead):
-                    3100 Main Street, Bridgeport, CT 06606
-                  </p>
-                </form>
-              </div>
+                </button>
+                <p className="text-center text-xs leading-relaxed text-[var(--muted)] sm:text-[13px]">
+                  Demo address (do not auto-submit): 3100 Main St, Bridgeport, CT
+                </p>
+              </form>
             </div>
           </div>
         </section>
@@ -236,7 +228,7 @@ export function Funnel() {
 
       {step === "result" && result && (
         <section className="space-y-5">
-          <div className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
+          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface)] p-6 shadow-sm sm:p-10">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
@@ -285,7 +277,7 @@ export function Funnel() {
               <button
                 type="button"
                 onClick={() => setStep("consult")}
-                className="flex-1 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-center text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white"
+                className="flex-1 rounded-xl bg-[var(--accent)] px-4 py-3.5 text-center text-base font-medium text-white shadow-sm transition hover:bg-[var(--accent-hover)]"
               >
                 Request a free consult
               </button>
@@ -296,7 +288,7 @@ export function Funnel() {
                   setResult(null);
                   setError(null);
                 }}
-                className="rounded-lg border border-[var(--border)] bg-transparent px-4 py-3.5 text-base font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/50 hover:text-[var(--accent-strong)]"
+                className="rounded-xl border border-[var(--border)] bg-transparent px-4 py-3.5 text-base font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/40 hover:text-[var(--accent-strong)]"
               >
                 Try another address
               </button>
@@ -306,7 +298,7 @@ export function Funnel() {
       )}
 
       {step === "consult" && (
-        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10">
+        <section className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface)] p-6 shadow-sm sm:p-10">
           <h2 className="text-2xl font-medium tracking-tight text-[var(--foreground)] sm:text-3xl">
             Schedule a consult
           </h2>
@@ -402,14 +394,14 @@ export function Funnel() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 rounded-lg bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-[var(--foreground)] transition hover:bg-[var(--accent-hover)] hover:text-white disabled:opacity-60"
+                className="flex-1 rounded-xl bg-[var(--accent)] px-4 py-3.5 text-base font-medium text-white shadow-sm transition hover:bg-[var(--accent-hover)] disabled:opacity-60"
               >
                 {loading ? "Sending…" : "Submit request"}
               </button>
               <button
                 type="button"
                 onClick={() => setStep("result")}
-                className="rounded-lg border border-[var(--border)] px-4 py-3.5 font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/50 hover:text-[var(--accent-strong)]"
+                className="rounded-xl border border-[var(--border)] px-4 py-3.5 font-medium text-[var(--muted)] transition hover:border-[var(--accent)]/40 hover:text-[var(--accent-strong)]"
               >
                 Back
               </button>
@@ -419,8 +411,8 @@ export function Funnel() {
       )}
 
       {step === "thanks" && (
-        <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6 text-center sm:p-12">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--success-bg)] text-[var(--success)]">
+        <section className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface)] p-6 text-center shadow-sm sm:p-12">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--success-bg)] text-[var(--success)]">
             <svg
               viewBox="0 0 24 24"
               className="h-5 w-5"
@@ -440,7 +432,7 @@ export function Funnel() {
           </p>
           <a
             href={TEL}
-            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-5 py-3 text-base font-medium tabular-nums tracking-tight text-[var(--foreground)] transition hover:border-[var(--accent)]/40"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] px-5 py-3 text-base font-medium tabular-nums tracking-tight text-[var(--foreground)] transition hover:border-[var(--accent)]/40"
           >
             {PHONE_DISPLAY}
           </a>
@@ -471,7 +463,7 @@ export function Funnel() {
 }
 
 const inputClass =
-  "w-full rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20";
+  "w-full rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted-dim)] focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20";
 
 function Field({
   label,
@@ -502,7 +494,7 @@ function Field({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3 py-3.5">
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-elevated)]/60 px-3 py-3.5">
       <dt className="text-[10px] font-medium uppercase tracking-[0.1em] text-[var(--muted-dim)]">
         {label}
       </dt>
@@ -518,7 +510,7 @@ function SuitabilityBadge({ value }: { value: string }) {
     value === "Good"
       ? "border-[var(--success)]/30 bg-[var(--success-bg)] text-[var(--success)]"
       : value === "Fair"
-        ? "border-amber-600/30 bg-amber-50 text-amber-700"
+        ? "border-amber-600/30 bg-amber-50 text-amber-800"
         : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted)]";
   return (
     <span
@@ -540,31 +532,37 @@ function StepIndicator({ step }: { step: Step }) {
   const current = order.indexOf(step);
 
   return (
-    <ol className="mb-8 flex items-center justify-center gap-1 sm:gap-2">
+    <ol className="mb-10 flex items-center justify-center gap-1.5 sm:gap-2">
       {steps.map((s, i) => {
         const active = i <= current;
+        const isCurrent = i === current;
         return (
-          <li key={s.id} className="flex items-center gap-1 sm:gap-2">
+          <li key={s.id} className="flex items-center gap-1.5 sm:gap-2">
             <span
-              className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-medium tabular-nums ${
-                active
-                  ? "bg-[var(--accent)] text-[var(--foreground)]"
-                  : "border border-[var(--border)] text-[var(--muted-dim)]"
+              className={`flex h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5 ${
+                isCurrent
+                  ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/25"
+                  : active
+                    ? "bg-[var(--accent)]/70"
+                    : "bg-[var(--border)]"
               }`}
-            >
-              {i + 1}
-            </span>
+              aria-hidden
+            />
             <span
               className={`hidden text-xs font-medium sm:inline ${
-                active ? "text-[var(--foreground)]" : "text-[var(--muted-dim)]"
+                isCurrent
+                  ? "text-[var(--foreground)]"
+                  : active
+                    ? "text-[var(--muted)]"
+                    : "text-[var(--muted-dim)]"
               }`}
             >
               {s.label}
             </span>
             {i < steps.length - 1 && (
               <span
-                className={`mx-1 h-px w-4 sm:w-8 ${
-                  i < current ? "bg-[var(--accent)]/45" : "bg-[var(--border)]"
+                className={`mx-0.5 h-px w-5 sm:w-10 ${
+                  i < current ? "bg-[var(--accent)]/35" : "bg-[var(--border)]"
                 }`}
               />
             )}
@@ -585,7 +583,7 @@ function ErrorBanner({
   return (
     <div
       role="alert"
-      className="flex flex-col gap-2 rounded-lg border border-[var(--danger)]/30 bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger)] sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-2 rounded-xl border border-[var(--danger)]/30 bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger)] sm:flex-row sm:items-center sm:justify-between"
     >
       <p>{message}</p>
       {onRetry && (
