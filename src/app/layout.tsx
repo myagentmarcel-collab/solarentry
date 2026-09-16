@@ -48,7 +48,7 @@ export default function RootLayout({
         className={`${plusJakarta.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased`}
       >
         <Header />
-        <main className="relative flex-1 px-4 py-10 sm:px-6 sm:py-16">
+        <main className="relative flex-1 px-4 py-8 sm:px-6 sm:py-14">
           <div className="site-solar-bg" aria-hidden="true" />
           <div className="relative z-10">{children}</div>
         </main>
