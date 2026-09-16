@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  /* Light, airy palette with a UN-inspired blue brand accent. */
-  --background: #f4f9fc;
-  --foreground: #0b2a3f;
+  /* Premium warm palette — strong WCAG contrast (dark on light; white on accent). */
+  --background: #faf7f2;
+  --foreground: #1c1917;
   --surface: #ffffff;
-  --surface-elevated: #edf6fb;
-  --border: #c5dce8;
-  --border-subtle: #dcebf2;
-  --muted: #4e6878;
-  --muted-dim: #58798a;
-  --accent: #009edb;
-  --accent-strong: #006f9d;
-  --accent-hover: #0076a8;
-  --accent-soft: rgba(0, 158, 219, 0.12);
-  --danger: #c2414f;
-  --danger-bg: rgba(194, 65, 79, 0.1);
-  --success: #16845a;
-  --success-bg: rgba(22, 132, 90, 0.12);
-  --map-light: #b9e1ee;
-  --map-mid: #86c5dc;
-  --map-dark: #559ebc;
-  --map-chrome: #18536f;
+  --surface-elevated: #f5f0e8;
+  --border: #e7e0d4;
+  --border-subtle: #efe9df;
+  --muted: #57534e;
+  --muted-dim: #78716c;
+  --accent: #b45309;
+  --accent-strong: #92400e;
+  --accent-hover: #9a3412;
+  --accent-soft: rgba(180, 83, 9, 0.12);
+  --danger: #b91c1c;
+  --danger-bg: rgba(185, 28, 28, 0.1);
+  --success: #15803d;
+  --success-bg: rgba(21, 128, 61, 0.12);
+  --map-light: #fde68a;
+  --map-mid: #fbbf24;
+  --map-dark: #d97706;
+  --map-chrome: #78350f;
   --radius: 0.5rem;
 }
 
@@ -44,54 +44,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Soft ambient wash — primary hero lives in the Funnel window card */
+/* Soft ambient wash — quieter, less busy behind the hero */
 .site-solar-bg {
   pointer-events: none;
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 0;
-  height: min(48vh, 480px);
-  opacity: 0.45;
+  height: min(42vh, 420px);
+  opacity: 0.18;
   background-image:
     linear-gradient(
       180deg,
       transparent 0%,
-      transparent 40%,
-      rgba(244, 249, 252, 0.55) 70%,
-      rgba(244, 249, 252, 0.95) 100%
+      transparent 45%,
+      rgba(250, 247, 242, 0.7) 75%,
+      rgba(250, 247, 242, 0.98) 100%
     ),
     radial-gradient(
-      ellipse 85% 75% at 50% 40%,
+      ellipse 90% 70% at 50% 35%,
       transparent 0%,
-      transparent 50%,
-      rgba(8, 18, 28, 0.15) 85%,
-      rgba(8, 18, 28, 0.28) 100%
+      transparent 55%,
+      rgba(28, 25, 23, 0.08) 90%,
+      rgba(28, 25, 23, 0.14) 100%
     ),
     url("/images/solar-cinematic.jpg");
   background-size: cover, cover, cover;
   background-position: center, center, center;
   background-repeat: no-repeat;
-  filter: saturate(1.05) contrast(1.03) brightness(1.04);
+  filter: saturate(0.95) contrast(0.98) brightness(1.06);
 }
 
 @media (max-width: 640px) {
   .site-solar-bg {
-    height: min(40vh, 360px);
-    opacity: 0.4;
+    height: min(36vh, 320px);
+    opacity: 0.14;
     background-image:
       linear-gradient(
         180deg,
         transparent 0%,
-        transparent 35%,
-        rgba(244, 249, 252, 0.6) 68%,
-        rgba(244, 249, 252, 0.96) 100%
+        transparent 40%,
+        rgba(250, 247, 242, 0.75) 70%,
+        rgba(250, 247, 242, 0.98) 100%
       ),
       radial-gradient(
-        ellipse 90% 80% at 50% 38%,
+        ellipse 95% 75% at 50% 35%,
         transparent 0%,
-        transparent 48%,
-        rgba(8, 18, 28, 0.18) 80%,
-        rgba(8, 18, 28, 0.3) 100%
+        transparent 52%,
+        rgba(28, 25, 23, 0.1) 88%,
+        rgba(28, 25, 23, 0.16) 100%
       ),
       url("/images/solar-cinematic.jpg");
     background-size: cover, cover, cover;
@@ -99,7 +99,7 @@ body {
   }
 }
 
-/* Thin focus ring — UN blue accent, high contrast */
+/* Thin focus ring — amber accent, high contrast */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

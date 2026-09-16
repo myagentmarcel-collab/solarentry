@@ -1,4 +1,6 @@
 /** Original geometric sun mark for Solar Entry — not derived from any third-party logo. */
+const BRAND_GOLD = "#B45309";
+
 export function BrandMark({
   className = "h-7 w-7",
   title,
@@ -18,9 +20,9 @@ export function BrandMark({
     >
       {title ? <title>{title}</title> : null}
       {/* Core disc */}
-      <circle cx="16" cy="16" r="5.25" fill="#2E5AEC" />
+      <circle cx="16" cy="16" r="5.25" fill={BRAND_GOLD} />
       {/* Geometric rays — short rectangles at 45° increments */}
-      <g fill="#2E5AEC">
+      <g fill={BRAND_GOLD}>
         <rect x="14.75" y="2" width="2.5" height="5" rx="0.4" />
         <rect x="14.75" y="25" width="2.5" height="5" rx="0.4" />
         <rect x="2" y="14.75" width="5" height="2.5" rx="0.4" />
@@ -76,7 +78,7 @@ export function BrandWordmark({
 
   return (
     <span
-      className={`select-none inline-flex items-baseline gap-[0.28em] text-[#2E5AEC] ${scale} ${className}`}
+      className={`select-none inline-flex items-baseline gap-[0.28em] text-[var(--accent-strong)] ${scale} ${className}`}
       style={{ letterSpacing: "-0.02em" }}
     >
       <span className="font-extrabold">Solar</span>

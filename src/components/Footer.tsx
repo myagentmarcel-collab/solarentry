@@ -6,8 +6,8 @@ const TEL = "tel:+12038183242";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+    <footer className="mt-auto border-t border-[var(--border-subtle)] bg-[var(--background)]">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-start sm:justify-between sm:px-6 sm:py-10">
         <div>
           <BrandLockup size="sm" />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
@@ -17,7 +17,7 @@ export function Footer() {
             solarentry.com
           </p>
         </div>
-        <div className="flex flex-col gap-2.5 text-sm sm:items-end">
+        <div className="flex flex-col gap-2 text-sm sm:items-end">
           <a
             href={TEL}
             className="font-medium tabular-nums tracking-tight text-[var(--foreground)] transition hover:text-[var(--accent-strong)]"
@@ -26,7 +26,7 @@ export function Footer() {
           </a>
           <Link
             href="/privacy"
-            className="text-[var(--muted)] transition hover:text-[var(--accent-strong)]"
+            className="text-[var(--muted-dim)] transition hover:text-[var(--foreground)]"
           >
             Privacy
           </Link>
