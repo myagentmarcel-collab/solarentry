@@ -1,5 +1,5 @@
 /** Original geometric sun mark for Solar Entry — not derived from any third-party logo. */
-const BRAND_GOLD = "#B45309";
+const BRAND_BLUE = "#0048ff";
 
 export function BrandMark({
   className = "h-7 w-7",
@@ -20,9 +20,9 @@ export function BrandMark({
     >
       {title ? <title>{title}</title> : null}
       {/* Core disc */}
-      <circle cx="16" cy="16" r="5.25" fill={BRAND_GOLD} />
+      <circle cx="16" cy="16" r="5.25" fill={BRAND_BLUE} />
       {/* Geometric rays — short rectangles at 45° increments */}
-      <g fill={BRAND_GOLD}>
+      <g fill={BRAND_BLUE}>
         <rect x="14.75" y="2" width="2.5" height="5" rx="0.4" />
         <rect x="14.75" y="25" width="2.5" height="5" rx="0.4" />
         <rect x="2" y="14.75" width="5" height="2.5" rx="0.4" />
