@@ -67,7 +67,7 @@ body {
       rgba(23, 27, 31, 0.08) 90%,
       rgba(23, 27, 31, 0.14) 100%
     ),
-    url("/images/solar-cinematic.jpg");
+    url("/images/solar-hero.jpg");
   background-size: cover, cover, cover;
   background-position: center, center, center;
   background-repeat: no-repeat;
@@ -93,7 +93,7 @@ body {
         rgba(23, 27, 31, 0.1) 88%,
         rgba(23, 27, 31, 0.16) 100%
       ),
-      url("/images/solar-cinematic.jpg");
+      url("/images/solar-hero.jpg");
     background-size: cover, cover, cover;
     background-position: center, center, center;
   }

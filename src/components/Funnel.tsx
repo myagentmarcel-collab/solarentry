@@ -164,8 +164,8 @@ export function Funnel() {
       {step === "address" && (
         <section className="relative min-h-[420px] w-full overflow-hidden rounded-2xl sm:min-h-[480px] md:min-h-[540px]">
           <img
-            src="/images/solar-cinematic.jpg"
-            alt="Distant home with rooftop solar, sun shining through the trees"
+            src="/images/solar-hero.jpg"
+            alt="Stone hillside home with a red metal roof and rooftop solar panels on a sunny day"
             className="absolute inset-0 h-full w-full object-cover object-[center_40%] brightness-[0.92] contrast-[1.05] saturate-[1.05]"
             width={1280}
             height={720}
