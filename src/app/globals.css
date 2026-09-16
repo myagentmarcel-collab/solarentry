@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  /* Premium warm palette — strong WCAG contrast (dark on light; white on accent). */
-  --background: #faf7f2;
-  --foreground: #1c1917;
+  /* Premium blue / cream palette (Trinity-inspired polish) — WCAG: dark on light; white on accent CTAs. */
+  --background: #F2F1ED;
+  --foreground: #171B1F;
   --surface: #ffffff;
-  --surface-elevated: #f5f0e8;
-  --border: #e7e0d4;
-  --border-subtle: #efe9df;
-  --muted: #57534e;
-  --muted-dim: #78716c;
-  --accent: #b45309;
-  --accent-strong: #92400e;
-  --accent-hover: #9a3412;
-  --accent-soft: rgba(180, 83, 9, 0.12);
+  --surface-elevated: #E7F0F5;
+  --border: #D5DEE6;
+  --border-subtle: #E2E8EE;
+  --muted: #22394E;
+  --muted-dim: #4A6278;
+  --accent: #0048ff;
+  --accent-strong: #003D76;
+  --accent-hover: #0039d6;
+  --accent-soft: rgba(0, 72, 255, 0.12);
   --danger: #b91c1c;
   --danger-bg: rgba(185, 28, 28, 0.1);
-  --success: #15803d;
-  --success-bg: rgba(21, 128, 61, 0.12);
-  --map-light: #fde68a;
-  --map-mid: #fbbf24;
-  --map-dark: #d97706;
-  --map-chrome: #78350f;
+  --success: #0AC380;
+  --success-bg: rgba(10, 195, 128, 0.12);
+  --map-light: #E2F5FF;
+  --map-mid: #7EB8E8;
+  --map-dark: #0048ff;
+  --map-chrome: #171B1F;
   --radius: 0.5rem;
 }
 
@@ -57,15 +57,15 @@ body {
       180deg,
       transparent 0%,
       transparent 45%,
-      rgba(250, 247, 242, 0.7) 75%,
-      rgba(250, 247, 242, 0.98) 100%
+      rgba(242, 241, 237, 0.7) 75%,
+      rgba(242, 241, 237, 0.98) 100%
     ),
     radial-gradient(
       ellipse 90% 70% at 50% 35%,
       transparent 0%,
       transparent 55%,
-      rgba(28, 25, 23, 0.08) 90%,
-      rgba(28, 25, 23, 0.14) 100%
+      rgba(23, 27, 31, 0.08) 90%,
+      rgba(23, 27, 31, 0.14) 100%
     ),
     url("/images/solar-cinematic.jpg");
   background-size: cover, cover, cover;
@@ -83,15 +83,15 @@ body {
         180deg,
         transparent 0%,
         transparent 40%,
-        rgba(250, 247, 242, 0.75) 70%,
-        rgba(250, 247, 242, 0.98) 100%
+        rgba(242, 241, 237, 0.75) 70%,
+        rgba(242, 241, 237, 0.98) 100%
       ),
       radial-gradient(
         ellipse 95% 75% at 50% 35%,
         transparent 0%,
         transparent 52%,
-        rgba(28, 25, 23, 0.1) 88%,
-        rgba(28, 25, 23, 0.16) 100%
+        rgba(23, 27, 31, 0.1) 88%,
+        rgba(23, 27, 31, 0.16) 100%
       ),
       url("/images/solar-cinematic.jpg");
     background-size: cover, cover, cover;
@@ -99,7 +99,7 @@ body {
   }
 }
 
-/* Thin focus ring — amber accent, high contrast */
+/* Thin focus ring — accent blue, high contrast */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

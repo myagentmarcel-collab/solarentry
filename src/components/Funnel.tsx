@@ -510,7 +510,7 @@ function SuitabilityBadge({ value }: { value: string }) {
     value === "Good"
       ? "border-[var(--success)]/30 bg-[var(--success-bg)] text-[var(--success)]"
       : value === "Fair"
-        ? "border-amber-600/30 bg-amber-50 text-amber-800"
+        ? "border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent-strong)]"
         : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted)]";
   return (
     <span
