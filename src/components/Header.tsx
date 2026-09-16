@@ -6,8 +6,8 @@ const TEL = "tel:+12038183242";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--background)]/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           href="/"
           className="group inline-flex items-center transition-opacity hover:opacity-80"
@@ -16,16 +16,16 @@ export function Header() {
           <BrandLockup />
         </Link>
 
-        <div className="flex items-center gap-3 sm:gap-5">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Link
             href="/privacy"
-            className="hidden text-sm text-[var(--muted)] transition hover:text-[var(--accent-strong)] sm:inline"
+            className="hidden text-sm text-[var(--muted-dim)] transition hover:text-[var(--foreground)] sm:inline"
           >
             Privacy
           </Link>
           <a
             href={TEL}
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]/50 hover:bg-[var(--surface-elevated)]"
+            className="inline-flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--surface-elevated)]"
           >
             <PhoneIcon />
             <span className="tabular-nums tracking-tight">{PHONE}</span>
@@ -40,7 +40,7 @@ function PhoneIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-3.5 w-3.5 text-[var(--muted)]"
+      className="h-3.5 w-3.5 text-[var(--muted-dim)]"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.75"
